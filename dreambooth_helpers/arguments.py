@@ -100,8 +100,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--flip_p",
             type=float,
-            required=False,
-            default=0.5,
+            required=True,
             help="Flip Percentage "
                  "Example: if set to 0.5, will flip (mirror) your training images 50% of the time."
                  "This helps expand your dataset without needing to include more training images."
@@ -112,15 +111,15 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             "--learning_rate",
             type=float,
             required=False,
-            default=1.0e-06,
-            help="Set the learning rate. Defaults to 1.0e-06 (0.000001).  Accepts scientific notation."
+            default=5.0e-07,
+            help="Set the learning rate. Defaults to 5.0e-07 (0.0000005).  Accepts scientific notation."
         )
 
         parser.add_argument(
             "--save_every_x_steps",
             type=int,
             required=False,
-            default=0,
+            default=1000,
             help="Saves a checkpoint every x steps"
         )
 
