@@ -1,5 +1,7 @@
 import argparse
 from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
+
+
 def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
     def _get_parser(**parser_kwargs):
         def str2bool(v):
@@ -12,6 +14,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             else:
                 raise argparse.ArgumentTypeError("Boolean value expected.")
         parser = argparse.ArgumentParser(**parser_kwargs)
+
         parser.add_argument(
             "--config_file_path",
             type=str,
@@ -145,6 +148,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
     parser = _get_parser()
     opt, unknown = parser.parse_known_args()
     config = JoePennaDreamboothConfigSchemaV1()
+    
     if opt.config_file_path is not None:
         config.saturate_from_file(config_file_path=opt.config_file_path)
     else:
