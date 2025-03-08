@@ -144,21 +144,7 @@ cmd> pip install -r ./requirements.txt
 ```
 
 #### Run
-`cmd> python main.py -t \
---project_name ProjectName \
---training_model v1-5-pruned.ckpt \
---regularization_images regularization_images \
---training_images training_images \
---max_training_steps 5000 \
---class_word person \
---token zwx \
---flip_p 0.0 \
---learning_rate 1.0e-06 \
---save_every_x_steps 250 \
---batch_size 2 \
---num_workers 1 \
---repeats 100 \
---val_repeats 10`
+`cmd> python main.py -t --project_name ProjectName --training_model v1-5-pruned.ckpt --regularization_images regularization_images --training_images training_images --max_training_steps 5000 --class_word person --token zwx --flip_p 0.0 --learning_rate 1.0e-06 --save_every_x_steps 2000 --batch_size 2 --num_workers 1 --repeats 100 --val_repeats 10`
 
 #### Cleanup
 ```cmd
