@@ -1,9 +1,11 @@
 from ldm.util import instantiate_from_config
 from ldm.modules.pruningckptio import PruningCheckpointIO
 from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
+
 class callbacks():
     def __init__(self, config: JoePennaDreamboothConfigSchemaV1):
         self.config = config
+        
     def metrics_over_trainsteps_checkpoint(self) -> dict:
         if self.config.save_every_x_steps > 0:
             return {
@@ -25,6 +27,7 @@ class callbacks():
                     "save_weights_only": True,
                 }
             }
+            
     def image_logger(self) -> dict:
         return {
             "target": "dreambooth_helpers.callback_helpers.ImageLogger",
@@ -34,6 +37,7 @@ class callbacks():
                 "increase_log_steps": False,
             }
         }
+        
     def model_checkpoint(self) -> dict:
         return {
             "target": "pytorch_lightning.callbacks.ModelCheckpoint",
@@ -45,6 +49,7 @@ class callbacks():
                 "every_n_train_steps": self.config.save_every_x_steps,
             }
         }
+
     def setup_callback(self, model_data_config, lightning_config) -> dict:
         return {
             "target": "dreambooth_helpers.callback_helpers.SetupCallback",
@@ -58,6 +63,7 @@ class callbacks():
                 "lightning_config": lightning_config,
             }
         }
+
     def learning_rate_logger(self) -> dict:
         return {
             "target": "pytorch_lightning.callbacks.LearningRateMonitor",
@@ -66,10 +72,12 @@ class callbacks():
                 # "log_momentum": True
             }
         }
+
     def cuda_callback(self) -> dict:
         return {
             "target": "dreambooth_helpers.callback_helpers.CUDACallback"
         }
+
 def get_dreambooth_model_config(config: JoePennaDreamboothConfigSchemaV1) -> dict:
     return {
         "base_learning_rate": config.learning_rate,
@@ -149,6 +157,7 @@ def get_dreambooth_model_config(config: JoePennaDreamboothConfigSchemaV1) -> dic
             "ckpt_path": config.model_path
         }
     }
+
 def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict:
     reg_block = {
         "target": "ldm.data.personalized.PersonalizedBase",
@@ -198,13 +207,16 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             }
         }
     }
+
     return data_config
+
 def get_dreambooth_model_data_config(model_config, data_config, lightning_config) -> dict:
     return {
         "model": model_config,
         "data": data_config,
         "lightning": lightning_config,
     }
+    
 def get_dreambooth_lightning_config(config: JoePennaDreamboothConfigSchemaV1) -> dict:
     cb = callbacks(config)
     lightning_config = {
@@ -226,7 +238,9 @@ def get_dreambooth_lightning_config(config: JoePennaDreamboothConfigSchemaV1) ->
     }
     if config.save_every_x_steps > 0:
         lightning_config["callbacks"]["metrics_over_trainsteps_checkpoint"] = cb.metrics_over_trainsteps_checkpoint()
+
     return lightning_config
+
 def get_dreambooth_trainer_config(config: JoePennaDreamboothConfigSchemaV1, model, lightning_config) -> dict:
     cb = callbacks(config)
     trainer_config = {
@@ -245,16 +259,19 @@ def get_dreambooth_trainer_config(config: JoePennaDreamboothConfigSchemaV1, mode
         trainer_config["checkpoint_callback"]["params"]["save_top_k"] = 1
         if config.debug:
             print(f"Monitoring {model.monitor} as checkpoint metric.")
+
     return trainer_config
+
 def get_dreambooth_trainer_kwargs(config: JoePennaDreamboothConfigSchemaV1, trainer_config, callbacks_config) -> dict:
     trainer_kwargs = dict()
     trainer_kwargs["logger"] = instantiate_from_config(trainer_config["logger"])
     trainer_kwargs["callbacks"] = [instantiate_from_config(callbacks_config[k]) for k in callbacks_config]
     trainer_kwargs["max_steps"] = config.max_training_steps
     trainer_kwargs["plugins"] = PruningCheckpointIO()
+
     return trainer_kwargs
-def get_dreambooth_callbacks_config(config: JoePennaDreamboothConfigSchemaV1, model_data_config,
-                                    lightning_config) -> dict:
+
+def get_dreambooth_callbacks_config(config: JoePennaDreamboothConfigSchemaV1, model_data_config, lightning_config) -> dict:
     cb = callbacks(config)
     callbacks_config = {
         "setup_callback": cb.setup_callback(
@@ -268,4 +285,5 @@ def get_dreambooth_callbacks_config(config: JoePennaDreamboothConfigSchemaV1, mo
     }
     if config.save_every_x_steps > 0:
         callbacks_config["metrics_over_trainsteps_checkpoint"] = cb.metrics_over_trainsteps_checkpoint()
+
     return callbacks_config
