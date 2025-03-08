@@ -134,16 +134,31 @@ From within the My Pods page,
 5. Navigate into the repository
    1. `C:\>cd Dreambooth-Stable-Diffusion`
 
-### Install Dependencies and Activate Environment
+### Install Dependencies and Activate Environment (linux)
 ```cmd
-cmd> python -m venv dreambooth_joepenna
-cmd> dreambooth_joepenna\Scripts\activate.bat
-cmd> pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
-cmd> pip install -r requirements.txt
+cmd> cd ./Dreambooth-Stable-Diffusion
+cmd> python3.10 -m venv dreambooth_joepenna
+cmd> source dreambooth_joepenna\bin\activate
+cmd> pip install -U pip==24.0 wheel
+cmd> pip install -r ./requirements.txt
 ```
 
 #### Run
-`cmd> python "main.py" --project_name "ProjectName" --training_model "C:\v1-5-pruned-emaonly-pruned.ckpt" --regularization_images "C:\regularization_images" --training_images "C:\training_images" --max_training_steps 2000 --class_word "person" --token "zwx" --flip_p 0 --learning_rate 1.0e-06 --save_every_x_steps 250`
+`cmd> python main.py -t \
+--project_name ProjectName \
+--training_model v1-5-pruned.ckpt \
+--regularization_images regularization_images \
+--training_images training_images \
+--max_training_steps 5000 \
+--class_word person \
+--token zwx \
+--flip_p 0.0 \
+--learning_rate 1.0e-06 \
+--save_every_x_steps 250 \
+--batch_size 2 \
+--num_workers 1 \
+--repeats 100 \
+--val_repeats 10`
 
 #### Cleanup
 ```cmd
