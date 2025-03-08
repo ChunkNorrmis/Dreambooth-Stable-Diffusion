@@ -41,6 +41,7 @@ class JoePennaDreamboothConfigSchemaV1:
         
         self.repeats: int = 100
         self.val_repeats: int = 10
+        
     def saturate(
             self,
             project_name: str,
@@ -118,12 +119,9 @@ class JoePennaDreamboothConfigSchemaV1:
         self.model_path = model_path
         if not os.path.exists(self.model_path):
             raise Exception(f"Model Path Not Found: '{self.model_path}'.")
-            
         self.batch_size = batch_size
-        
         self.num_workers = num_workers
         self.repeats = repeats
-        
         self.val_repeats = val_repeats
         self.validate_gpu_vram()
         self._create_log_folders()
