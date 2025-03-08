@@ -123,32 +123,31 @@ From within the My Pods page,
 
 ## <a name="running-locally"></a> Running Locally Instructions
 
-### <a name="running-locally-venv"></a> Setup - Virtual Environment
+### <a name="running-locally-venv"></a> Setup - Virtual Environment (linux)
 
 ### Pre-Requisites
-1. [Git](https://gitforwindows.org/)
-2. [Python 3.10](https://www.python.org/downloads/)
-3. Open `cmd`
-4. Clone the repository
-   1. `C:\>git clone https://github.com/JoePenna/Dreambooth-Stable-Diffusion`
-5. Navigate into the repository
-   1. `C:\>cd Dreambooth-Stable-Diffusion`
+1. Open `bash` or similar shell
+2. Clone the repository
+   `$ git clone https://github.com/ChunkNorrmis/Dreambooth-Stable-Diffusion.git`
+3. Navigate into the repository
+   `$ cd ./Dreambooth-Stable-Diffusion`
 
-### Install Dependencies and Activate Environment (linux)
-```cmd
-cmd> cd ./Dreambooth-Stable-Diffusion
-cmd> python3.10 -m venv dreambooth_joepenna
-cmd> source dreambooth_joepenna\bin\activate
-cmd> pip install -U pip==24.0 wheel
-cmd> pip install --no-cache-dir -r ./requirements.txt
+### Install Dependencies and Activate Environment
+```bash
+$ python3.10 -m venv dream-venv
+$ source ./dream-venv\bin\activate
+$ pip install -U pip==24.0 wheel
+$ pip install --no-cache-dir -r ./requirements.txt
 ```
 
 #### Run
-`cmd> python main.py -t --project_name ProjectName --training_model v1-5-pruned.ckpt --regularization_images regularization_images --training_images training_images --max_training_steps 5000 --class_word person --token zwx --flip_p 0.0 --learning_rate 1.0e-06 --save_every_x_steps 2000 --batch_size 2 --num_workers 1 --repeats 100 --val_repeats 10`
+```bash
+$ python main.py -t --project_name ProjectName --training_model v1-5-pruned.ckpt --regularization_images regularization_images --training_images training_images --max_training_steps 5000 --class_word person --token zwx --flip_p 0.0 --learning_rate 1.0e-06 --save_every_x_steps 2000 --batch_size 2 --num_workers 1 --repeats 100 --val_repeats 10
+```
 
 #### Cleanup
-```cmd
-cmd> deactivate 
+```bash
+$ deactivate 
 ```
 
 ### <a name="running-locally-conda"></a>  Setup - Conda
