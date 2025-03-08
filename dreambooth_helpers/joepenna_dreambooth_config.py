@@ -70,24 +70,30 @@ class JoePennaDreamboothConfigSchemaV1:
         self.project_name = project_name
         if self.project_name is None or self.project_name == '':
             raise Exception("'--project_name': Required.")
+        
         if config_date_time is None:
             self.config_date_time = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S")
         else:
             self.config_date_time = config_date_time
-        # parameter values
+        
         self.project_config_filename = f"{self.project_name}-config.json"
+        
         self.seed = seed
-        # Global seed
         if run_seed_everything:
             seed_everything(self.seed)
+        
         self.debug = debug
+        
         self.gpu = gpu
+        
         self.max_training_steps = max_training_steps
         if self.max_training_steps <= 0:
             raise Exception("'--max_training_steps': Required. Must be > 0.")
+        
         self.save_every_x_steps = save_every_x_steps
         if self.save_every_x_steps < 0:
             raise Exception("--save_every_x_steps: must be greater than or equal to 0")
+        
         self.training_images_folder_path = training_images_folder_path
         if not os.path.exists(self.training_images_folder_path):
             raise Exception(f"Training Images Path Not Found: '{self.training_images_folder_path}'.")
@@ -101,19 +107,23 @@ class JoePennaDreamboothConfigSchemaV1:
             raise Exception(f"No Training Images (*.png, *.jpg, *.jpeg) found in '{self.training_images_folder_path}'.")
         self.training_images_count = len(_training_image_paths)
         self.training_images = _training_image_paths
+
         if token_only is False and regularization_images_folder_path is not None and regularization_images_folder_path != '':
             self.regularization_images_folder_path = regularization_images_folder_path
-            if not os.path.exists(self.regularization_images_folder_path):
-                raise Exception(f"Regularization Images Path Not Found: '{self.regularization_images_folder_path}'.")
+        if not os.path.exists(self.regularization_images_folder_path):
+            raise Exception(f"Regularization Images Path Not Found: '{self.regularization_images_folder_path}'.")
+        
         self.token = token
         if self.token is None or self.token == '':
             raise Exception(f"Token not provided.")
         self.token_only = token_only
         if token_only is False:
             self.class_word = class_word
+        
         self.flip_percent = flip_percent
         if self.flip_percent < 0 or self.flip_percent > 1:
             raise Exception("--flip_p: must be between 0 and 1")
+        
         self.learning_rate = learning_rate
         self.model_repo_id = model_repo_id
         self.model_path = model_path
@@ -125,6 +135,7 @@ class JoePennaDreamboothConfigSchemaV1:
         self.val_repeats = val_repeats
         self.validate_gpu_vram()
         self._create_log_folders()
+    
     def validate_gpu_vram(self):
         def convert_size(size_bytes):
             if size_bytes == 0:
@@ -134,12 +145,13 @@ class JoePennaDreamboothConfigSchemaV1:
             p = math.pow(1024, i)
             s = round(size_bytes / p, 2)
             return "%s %s" % (s, size_name[i])
-            # Check total available GPU memory
+
         gpu_vram = int(torch.cuda.get_device_properties(self.gpu).total_memory)
         print(f"gpu_vram: {convert_size(gpu_vram)}")
         twenty_one_gigabytes = 22548578304
         if gpu_vram < twenty_one_gigabytes:
             raise Exception(f"VRAM: Currently unable to run on less than {convert_size(twenty_one_gigabytes)} of VRAM.")
+
     def saturate_from_file(
             self,
             config_file_path: str,
@@ -175,10 +187,13 @@ class JoePennaDreamboothConfigSchemaV1:
                 )
             else:
                 print(f"Unrecognized schema: {config_parsed['schema']}", file=sys.stderr)
+    
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
+    
     def create_checkpoint_file_name(self, steps: str):
         return f"{self.project_name}_{int(steps):05d}_steps".replace(' ', '_')
+    
     def save_config_to_file(
             self,
             save_path: str,
@@ -194,18 +209,25 @@ class JoePennaDreamboothConfigSchemaV1:
             shutil.copy(config_save_path, os.path.join(save_path, "active-config.json"))
             print(project_config_json)
             print(f"✅ {self.project_config_filename} successfully generated.  Proceed to training.")
+    
     def get_training_folder_name(self) -> str:
         return f"{self.project_name}"
+    
     def log_directory(self) -> str:
         return os.path.join("logs", self.get_training_folder_name())
+    
     def log_checkpoint_directory(self) -> str:
         return os.path.join(self.log_directory(), "ckpts")
+    
     def log_intermediate_checkpoints_directory(self) -> str:
         return os.path.join(self.log_checkpoint_directory(), "trainstep_ckpts")
+    
     def log_config_directory(self) -> str:
         return os.path.join(self.log_directory(), "configs")
+    
     def trained_models_directory(self) -> str:
         return "trained_models"
+    
     def _create_log_folders(self):
         os.makedirs(self.log_directory(), exist_ok=True)
         os.makedirs(self.log_checkpoint_directory(), exist_ok=True)
