@@ -140,7 +140,7 @@ cmd> cd ./Dreambooth-Stable-Diffusion
 cmd> python3.10 -m venv dreambooth_joepenna
 cmd> source dreambooth_joepenna\bin\activate
 cmd> pip install -U pip==24.0 wheel
-cmd> pip install -r ./requirements.txt
+cmd> pip install --no-cache-dir -r ./requirements.txt
 ```
 
 #### Run
