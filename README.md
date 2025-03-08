@@ -135,14 +135,14 @@ From within the My Pods page,
 ### Install Dependencies and Activate Environment
 ```bash
 $ python3.10 -m venv dream-venv
-$ source ./dream-venv\bin\activate
+$ source ./dream-venv/bin/activate
 $ pip install -U pip==24.0 wheel
 $ pip install --no-cache-dir -r ./requirements.txt
 ```
 
 #### Run
 ```bash
-$ python main.py -t --project_name ProjectName --training_model v1-5-pruned.ckpt --regularization_images regularization_images --training_images training_images --max_training_steps 5000 --class_word person --token zwx --flip_p 0.0 --learning_rate 1.0e-06 --save_every_x_steps 2000 --batch_size 2 --num_workers 1 --repeats 100 --val_repeats 10
+$ python main.py -t --project_name ProjectName --training_model v1-5-pruned.ckpt --regularization_images regularization_images --training_images training_images --max_training_steps 5000 --class_word sandwich --token zwx --flip_p 0.0 --learning_rate 1.0e-06 --save_every_x_steps 2000 --batch_size 2 --num_workers 1 --repeats 100 --val_repeats 10
 ```
 
 #### Cleanup
