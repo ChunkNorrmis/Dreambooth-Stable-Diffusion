@@ -40,12 +40,12 @@ class PersonalizedBase(Dataset):
         self._length = self.num_images
                      
         self.placeholder_token = arg.token 
-        self.token_only = token_only
+        self.token_only = arg.token_only
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
         self.mixing_prob = mixing_prob
 
-        self.coarse_class_text = arg.class
+        self.coarse_class_text = arg.class_word
         if per_image_tokens:
             assert self.num_images < len(
                 per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
@@ -91,12 +91,11 @@ class PersonalizedBase(Dataset):
                       (w - crop) // 2:(w + crop) // 2]
         
         image = Image.fromarray(img)
-        if self.size is not None:
-            if image.size > (self.size, self.size):
-                image = image.resize(
-                    (self.size, self.size),
-                    resample=self.interpolation
-                )
+        if self.size is not None and image.size > (self.size, self.size):
+            image = image.resize(
+                (self.size, self.size),
+                resample=self.interpolation
+            )
 
         image = self.flip(image)
         image = np.array(image).astype(np.uint8)
