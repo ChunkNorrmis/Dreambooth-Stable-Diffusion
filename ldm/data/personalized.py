@@ -15,7 +15,7 @@ per_img_token_list = [
 
 class PersonalizedBase(Dataset):
     def __init__(self,
-                 data_root=os.path.relpath("../../")
+                 data_root=os.path.relpath("../../"),
                  size,
                  repeats,
                  interpolation,
