@@ -15,8 +15,7 @@ per_img_token_list = [
 
 class PersonalizedBase(Dataset):
     def __init__(self,
-                 arg = JoePennaDreamboothConfigSchemaV1,
-                 data_root,
+                 data_root=os.path.relpath(../../)
                  size,
                  repeats,
                  interpolation,
@@ -28,10 +27,12 @@ class PersonalizedBase(Dataset):
                  mixing_prob=0.25,
                  coarse_class_text,
                  token_only,
-                 reg=False
+                 reg=False,
+                 arg = JoePennaDreamboothConfigSchemaV1
                  ):
 
         self.arg = arg
+                     
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
 
