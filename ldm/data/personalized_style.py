@@ -66,7 +66,7 @@ class PersonalizedBase(Dataset):
                  center_crop=False,
             ):
 
-        args = JoePennaDreamboothConfigSchemaV1
+        args = JoePennaDreamboothConfigSchemaV1.saturate()
         self.data_root = data_root
         self.image_paths = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
 
