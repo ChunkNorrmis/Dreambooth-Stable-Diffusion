@@ -28,10 +28,9 @@ class PersonalizedBase(Dataset):
                  coarse_class_text="*",
                  token_only=False,
                  reg=False,
-                 arg: JoePennaDreamboothConfigSchemaV1
-                 ):
+            ):
 
-        self.arg = arg
+        args = JoePennaDreamboothConfigSchemaV1
                      
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
@@ -40,13 +39,13 @@ class PersonalizedBase(Dataset):
         self.num_images = len(self.image_paths)
         self._length = self.num_images
                      
-        self.placeholder_token = arg.token 
+        self.placeholder_token = args.token 
         self.token_only = token_only
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
         self.mixing_prob = mixing_prob
 
-        self.coarse_class_text = arg.class_word
+        self.coarse_class_text = args.class_word
         if per_image_tokens:
             assert self.num_images < len(
                 per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
@@ -54,14 +53,14 @@ class PersonalizedBase(Dataset):
         if set == "train":
             self._length = self.num_images * arg.repeats
 
-        self.size = arg.resolution
+        self.size = args.resolution
         self.interpolation = {"linear": PIL.Image.LINEAR,
                               "bilinear": PIL.Image.BILINEAR,
                               "bicubic": PIL.Image.BICUBIC,
                               "lanczos": PIL.Image.LANCZOS,
-                              }[arg.sampler]
+                              }[args.sampler]
 
-        self.flip_p = transforms.RandomHorizontalFlip(p=arg.flip_percent)
+        self.flip_p = transforms.RandomHorizontalFlip(p=args.flip_percent)
         self.reg = reg
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
@@ -99,7 +98,7 @@ class PersonalizedBase(Dataset):
                 resample=self.interpolation
             )
 
-        image = self.flip(image)
+        image = self.flip_p(image)
         image = np.array(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
