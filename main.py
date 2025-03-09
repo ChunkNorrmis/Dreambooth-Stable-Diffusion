@@ -34,28 +34,28 @@ def worker_init_fn(_):
         return np.random.seed(np.random.get_state()[1][0] + worker_id)
 
 
+parser = split_parser()
+args, unknown = parser.parse_known_args()
+
 class DataModuleFromConfig(pl.LightningDataModule):
     def __init__(
             self,
-            batch_size,
-            train=None,
-            reg=None,
-            validation=None,
+            batch_size=args.batch_size,
+            train="train",
+            reg="reg",
+            validation="validation",
             test=None,
             predict=None,
             wrap=False,
-            num_workers=None,
+            num_workers=args.num_workers,
             shuffle_test_loader=False,
             use_worker_init_fn=False,
             shuffle_val_dataloader=False
     ):
-        super().__init__()
-        parser = split_parser()
-        args = parser.parse_knwon_args()
-        
-        self.batch_size = args.batch_size
+        super(DataModuleFromConfig).__init__()
+        self.batch_size = batch_size
         self.dataset_configs = dict()
-        self.num_workers = args.num_workers if num_workers is not None else batch_size * 2
+        self.num_workers = num_workers if num_workers is not None else batch_size * 2
         self.use_worker_init_fn = use_worker_init_fn
         if train is not None:
             self.dataset_configs["train"] = train
