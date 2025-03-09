@@ -56,12 +56,12 @@ per_img_token_list = [
 class PersonalizedBase(Dataset):
     def __init__(self,
                  data_root=os.path.relpath("../../"),
-                 size,
-                 repeats,
-                 interpolation,
-                 flip_p,
+                 size: int,
+                 repeats: int,
+                 interpolation: str,
+                 flip_p: float,
                  set="train",
-                 placeholder_token,
+                 placeholder_token: str,
                  per_image_tokens=False,
                  center_crop=False,
                  arg = JoePennaDreamboothConfigSchemaV1
