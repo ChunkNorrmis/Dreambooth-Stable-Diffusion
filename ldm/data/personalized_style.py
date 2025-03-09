@@ -65,7 +65,7 @@ class PersonalizedBase(Dataset):
                  per_image_tokens=False,
                  center_crop=False,
             ):
-
+        super(PersonalizedBase).__init__()
         args = split_parser()
         self.data_root = data_root
         self.image_paths = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
