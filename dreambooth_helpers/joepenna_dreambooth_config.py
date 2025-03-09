@@ -33,8 +33,8 @@ class JoePennaDreamboothConfigSchemaV1:
         self.class_word: str = ''
         
         self.flip_percent: float = 0.5
-        self.resolution: int = None
-        self.sampler: str = None
+        self.resolution: int = 512
+        self.sampler: str = "bicubic"
         
         self.learning_rate: float = 1.0e-06
         self.model_repo_id: str = ''
@@ -55,8 +55,8 @@ class JoePennaDreamboothConfigSchemaV1:
             token: str,
             class_word: str,
             flip_percent: float,
-            resolution: int = None,
-            sampler: str = None,
+            resolution: int = 512,
+            sampler: str = "bicubic",
             learning_rate: float,
             model_path: str,
             config_date_time: str = None,
@@ -66,10 +66,10 @@ class JoePennaDreamboothConfigSchemaV1:
             model_repo_id: str = '',
             token_only: bool = False,
             run_seed_everything: bool = True,
-            batch_size: int = 2,
+            batch_size: int = 1,
             num_workers: int = 1,
             repeats: int = 100,
-            val_repeats: int = 10,
+            val_repeats: int = 10
     ):
         
         self.project_name = project_name
