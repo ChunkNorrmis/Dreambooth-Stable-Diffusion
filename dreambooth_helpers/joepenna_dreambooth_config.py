@@ -14,31 +14,32 @@ class JoePennaDreamboothConfigSchemaV1:
         self.schema: int = 1
         self.config_date_time: str = ''
         self.project_config_filename: str = ''
-        # Project
+        
         self.project_name: str = ''
         self.seed: int = 47
         self.debug: bool = False
         self.gpu: int = 0
-        # Training Steps
+        
         self.max_training_steps: int = 2000
         self.save_every_x_steps: int = 0
-        # Training & Regularization Images
+        
         self.training_images_folder_path: str = ''
         self.training_images_count: int = 0
         self.training_images: list[str] = ['']
         self.regularization_images_folder_path: str = None
-        # Token and Class
+                
         self.token: str = ''
         self.token_only: bool = False
         self.class_word: str = ''
-        # Training Params
+        
         self.flip_percent: float = 0.5
+        self.resolution: int = None
         self.learning_rate: float = 1.0e-06
-        # Model Info
+        
         self.model_repo_id: str = ''
         self.model_path: str = ''
           
-        self.batch_size: int = 2
+        self.batch_size: int = 1
         self.num_workers: int = 1
         
         self.repeats: int = 100
@@ -54,6 +55,7 @@ class JoePennaDreamboothConfigSchemaV1:
             token: str,
             class_word: str,
             flip_percent: float,
+            resolution: int = None,
             learning_rate: float,
             model_path: str,
             config_date_time: str = None,
@@ -66,7 +68,7 @@ class JoePennaDreamboothConfigSchemaV1:
             batch_size: int = 2,
             num_workers: int = 1,
             repeats: int = 100,
-            val_repeats: int = 10
+            val_repeats: int = 10,
     ):
         # Map the values
         self.project_name = project_name
@@ -125,8 +127,9 @@ class JoePennaDreamboothConfigSchemaV1:
         self.flip_percent = flip_percent
         if self.flip_percent < 0 or self.flip_percent > 1:
             raise Exception("--flip_p: must be between 0 and 1")
-        
+        self.resolution = resolution
         self.learning_rate = learning_rate
+        
         self.model_repo_id = model_repo_id
         self.model_path = model_path
         if not os.path.exists(self.model_path):
@@ -174,6 +177,7 @@ class JoePennaDreamboothConfigSchemaV1:
                     token=config_parsed['token'],
                     class_word=config_parsed['class_word'],
                     flip_percent=config_parsed['flip_percent'],
+                    resolution=config_parsed['resolution'],
                     learning_rate=config_parsed['learning_rate'],
                     model_path=config_parsed['model_path'],
                     config_date_time=config_parsed['config_date_time'],
