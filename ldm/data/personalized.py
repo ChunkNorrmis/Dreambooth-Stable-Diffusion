@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 from captionizer import caption_from_path, generic_captions_from_path
 from captionizer import find_images
-from dreambooth_helpers.arguments import _get_parser
+from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
 
 per_img_token_list = [
     'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
@@ -15,54 +15,51 @@ per_img_token_list = [
 
 class PersonalizedBase(Dataset):
     def __init__(self,
+                 arg = JoePennaDreamboothConfigSchemaV1,
                  data_root,
-                 size=None,
-                 repeats=100,
-                 interpolation="bicubic",
-                 flip_p=0.5,
+                 size,
+                 repeats,
+                 interpolation,
+                 flip_p,
                  set="train",
-                 placeholder_token="dog",
+                 placeholder_token,
                  per_image_tokens=False,
                  center_crop=False,
                  mixing_prob=0.25,
-                 coarse_class_text=None,
+                 coarse_class_text,
                  token_only=False,
                  reg=False
                  ):
 
-        parser = _get_parser()
-        args = parser.parse_args()
-                             
+        self.arg = arg
         self.data_root = data_root
-
         self.image_paths = find_images(self.data_root)
 
         # self._length = len(self.image_paths)
         self.num_images = len(self.image_paths)
         self._length = self.num_images
                      
-        self.placeholder_token = args.token 
+        self.placeholder_token = arg.token 
         self.token_only = token_only
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
         self.mixing_prob = mixing_prob
 
-        self.coarse_class_text = args.class
-
+        self.coarse_class_text = arg.class
         if per_image_tokens:
             assert self.num_images < len(
                 per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if set == "train":
-            self._length = self.num_images * repeats
+            self._length = self.num_images * arg.repeats
 
-        self.size = args.resolution
+        self.size = arg.resolution
         self.interpolation = {"linear": PIL.Image.LINEAR,
                               "bilinear": PIL.Image.BILINEAR,
                               "bicubic": PIL.Image.BICUBIC,
                               "lanczos": PIL.Image.LANCZOS,
-                              }[args.sampler]
-        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
+                              }[arg.sampler]
+        self.flip = transforms.RandomHorizontalFlip(p=arg.flip_p)
         self.reg = reg
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
@@ -95,7 +92,7 @@ class PersonalizedBase(Dataset):
         
         image = Image.fromarray(img)
         if self.size is not None:
-            if not image.size == (self.size, self.size):
+            if image.size > (self.size, self.size):
                 image = image.resize(
                     (self.size, self.size),
                     resample=self.interpolation
