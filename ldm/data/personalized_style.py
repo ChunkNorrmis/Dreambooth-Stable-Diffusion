@@ -92,7 +92,9 @@ class PersonalizedBase(Dataset):
                               "bicubic": PIL.Image.BICUBIC,
                               "lanczos": PIL.Image.LANCZOS,
                               }[arg.sampler]
-        self.flip = transforms.RandomHorizontalFlip(p=arg.flip_p)
+
+        flip_p = arg.flip_percent                     
+        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
 
     def __len__(self):
         return self._length
