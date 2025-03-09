@@ -13,24 +13,26 @@ per_img_token_list = [
     'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
 ]
 
+parser = split_parser()
+args, unknown = parser.parse_known_args()
+
 class PersonalizedBase(Dataset):
     def __init__(self,
                  data_root,
-                 size=None,
-                 repeats=None,
-                 interpolation=None,
-                 flip_p=None,
+                 size=args.resolution,
+                 repeats=args.repeats,
+                 interpolation=f"{args.sampler}",
+                 flip_p=args.flip_p,
                  set="train",
                  placeholder_token="sandwich",
                  per_image_tokens=False,
                  center_crop=False,
                  mixing_prob=0.25,
-                 coarse_class_text="*",
+                 coarse_class_text=args.class_word,
                  token_only=False,
-                 reg=False,
-            ):
+                 reg=False
+                 ):
         super(PersonalizedBase).__init__()
-        args = split_parser()
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
 
@@ -38,28 +40,29 @@ class PersonalizedBase(Dataset):
         self.num_images = len(self.image_paths)
         self._length = self.num_images
 
-        self.placeholder_token = args.token
+        self.placeholder_token = placeholder_token
         self.token_only = token_only
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
         self.mixing_prob = mixing_prob
 
-        self.coarse_class_text = args.class_word
+        self.coarse_class_text = coarse_class_text
         if per_image_tokens:
             assert self.num_images < len(
                 per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
+        self.repeats = repeats
         if set == "train":
-            self._length = self.num_images * args.repeats
+            self._length = self.num_images * self.repeats
 
-        self.size = args.resolution
+        self.size = size
         self.interpolation = {"linear": PIL.Image.LINEAR,
                               "bilinear": PIL.Image.BILINEAR,
                               "bicubic": PIL.Image.BICUBIC,
                               "lanczos": PIL.Image.LANCZOS,
-                              }[args.sampler]
+                              }[interpolation]
 
-        self.flip_p = transforms.RandomHorizontalFlip(p=args.flip_percent)
+        self.flip_p = transforms.RandomHorizontalFlip(p=flip_p)
         self.reg = reg
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
