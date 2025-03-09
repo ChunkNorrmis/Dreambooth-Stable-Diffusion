@@ -157,11 +157,11 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         )
         
         return parser
-        
+
     parser = _get_parser()
     opt, unknown = parser.parse_known_args()
     config = JoePennaDreamboothConfigSchemaV1()
-    
+
     if opt.config_file_path is not None:
         config.saturate_from_file(config_file_path=opt.config_file_path)
     else:
@@ -188,5 +188,53 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             val_repeats=opt.val_repeats,
             sampler=opt.sampler
         )
-        
+
     return config
+
+def split_parser():
+    def parser_split():
+        parser = argparse.ArgumentParser()
+        parser.add_argument(
+            "--batch_size",
+            type=int,
+            default=1,
+            required=False
+        )
+        parser.add_argument(
+            "--num_workers",
+            type=int,
+            default=1,
+            required=False
+        )
+        parser.add_argument(
+            "--repeats",
+            type=int,
+            default=100,
+            required=False
+        )
+        parser.add_argument(
+            "--val_repeats",
+            type=int,
+            default=10,
+            required=False
+        )
+        parser.add_argument(
+            "--resolution",
+            type=int,
+            default=512,
+            required=False
+        )
+        parser.add_argument(
+            "--sampler",
+            type=str,
+            choices=["linear", "bilinear", "bicubic", "lanczos"],
+            default="bicubic",
+            required=False
+        )
+
+        return parser
+
+    parser = parser_split()
+    args = parser.parse_args()
+
+    return args
