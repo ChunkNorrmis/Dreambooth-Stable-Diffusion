@@ -148,6 +148,13 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             default=None,
             required=False
         )
+        parser.add_argument(
+            "--sampler",
+            type=str,
+            choices=["linear", "bilinear", "bicubic", "lanczos"],
+            required=False,
+            default="bicubic"
+        )
         
         return parser
         
@@ -171,6 +178,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             token_only=opt.token_only,
             class_word=opt.class_word,
             flip_percent=opt.flip_p,
+            resolution=opt.resolution,
             learning_rate=opt.learning_rate,
             model_repo_id='',
             model_path=opt.training_model,
@@ -178,7 +186,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             num_workers=opt.num_workers,
             repeats=opt.repeats,
             val_repeats=opt.val_repeats,
-            resolution=opt.resolution
+            sampler=opt.sampler
         )
         
     return config
