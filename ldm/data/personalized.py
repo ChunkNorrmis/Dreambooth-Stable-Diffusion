@@ -7,7 +7,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 from captionizer import caption_from_path, generic_captions_from_path
 from captionizer import find_images
-from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
+from dreambooth_helpers.arguments import split_parser
 
 per_img_token_list = [
     'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
@@ -17,9 +17,9 @@ class PersonalizedBase(Dataset):
     def __init__(self,
                  data_root=os.path.relpath("../../"),
                  size=None,
-                 repeats=100,
-                 interpolation="bicubic",
-                 flip_p=0.5,
+                 repeats=None,
+                 interpolation=None,
+                 flip_p=None,
                  set="train",
                  placeholder_token="sandwich",
                  per_image_tokens=False,
@@ -30,16 +30,15 @@ class PersonalizedBase(Dataset):
                  reg=False,
             ):
 
-        args = JoePennaDreamboothConfigSchemaV1.saturate()
-                     
+        args = split_parser()
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
 
         # self._length = len(self.image_paths)
         self.num_images = len(self.image_paths)
         self._length = self.num_images
-                     
-        self.placeholder_token = args.token 
+
+        self.placeholder_token = args.token
         self.token_only = token_only
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
@@ -51,7 +50,7 @@ class PersonalizedBase(Dataset):
                 per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if set == "train":
-            self._length = self.num_images * arg.repeats
+            self._length = self.num_images * args.repeats
 
         self.size = args.resolution
         self.interpolation = {"linear": PIL.Image.LINEAR,
@@ -90,7 +89,7 @@ class PersonalizedBase(Dataset):
             h, w, = img.shape[0], img.shape[1]
             img = img[(h - crop) // 2:(h + crop) // 2,
                       (w - crop) // 2:(w + crop) // 2]
-        
+
         image = Image.fromarray(img)
         if self.size is not None and image.size > (self.size, self.size):
             image = image.resize(
