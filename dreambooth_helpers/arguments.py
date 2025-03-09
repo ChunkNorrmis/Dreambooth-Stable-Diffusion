@@ -235,6 +235,6 @@ def split_parser():
         return parser
 
     parser = parser_split()
-    args = parser.parse_args()
+    args = parser.parse_known_args()
 
     return args
