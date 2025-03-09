@@ -63,7 +63,7 @@ class PersonalizedBase(Dataset):
                  flip_p,
                  set="train",
                  placeholder_token,
-                 per_image_tokens=,
+                 per_image_tokens=False,
                  center_crop=False,
                  ):
 
@@ -77,7 +77,7 @@ class PersonalizedBase(Dataset):
 
         self.placeholder_token = arg.token
 
-        self.per_image_tokens = arg.per_image_tokens
+        self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
 
         if per_image_tokens:
