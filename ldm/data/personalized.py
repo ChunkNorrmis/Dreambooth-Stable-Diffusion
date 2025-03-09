@@ -27,7 +27,7 @@ class PersonalizedBase(Dataset):
                  center_crop=False,
                  mixing_prob=0.25,
                  coarse_class_text,
-                 token_only=False,
+                 token_only,
                  reg=False
                  ):
 
