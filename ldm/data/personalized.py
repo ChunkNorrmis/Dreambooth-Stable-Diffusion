@@ -29,7 +29,7 @@ class PersonalizedBase(Dataset):
                  token_only=False,
                  reg=False,
             ):
-
+        super(PersonalizedBase).__init__()
         args = split_parser()
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
