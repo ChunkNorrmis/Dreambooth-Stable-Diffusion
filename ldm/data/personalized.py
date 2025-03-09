@@ -30,7 +30,7 @@ class PersonalizedBase(Dataset):
                  reg=False,
             ):
 
-        args = JoePennaDreamboothConfigSchemaV1
+        args = JoePennaDreamboothConfigSchemaV1.saturate()
                      
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
