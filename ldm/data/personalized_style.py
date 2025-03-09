@@ -4,7 +4,7 @@ import PIL
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
-from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
+from dreambooth_helpers.arguments import split_parser
 import random
 
 imagenet_templates_small = [
@@ -55,18 +55,18 @@ per_img_token_list = [
 
 class PersonalizedBase(Dataset):
     def __init__(self,
-                 data_root=os.path.relpath("../../"),
+                 data_root,
                  size=None,
-                 repeats=100,
-                 interpolation="bicubic",
-                 flip_p=0.5,
+                 repeats=None,
+                 interpolation=None,
+                 flip_p=None,
                  set="train",
                  placeholder_token="sandwich",
                  per_image_tokens=False,
                  center_crop=False,
             ):
 
-        args = JoePennaDreamboothConfigSchemaV1.saturate()
+        args = split_parser()
         self.data_root = data_root
         self.image_paths = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
 
