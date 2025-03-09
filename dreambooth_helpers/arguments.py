@@ -142,6 +142,12 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             default=10,
             required=False
         )
+        parser.add_argument(
+            "--resolution",
+            type=int,
+            default=None,
+            required=False
+        )
         
         return parser
         
@@ -171,7 +177,8 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             batch_size=opt.batch_size,
             num_workers=opt.num_workers,
             repeats=opt.repeats,
-            val_repeats=opt.val_repeats
+            val_repeats=opt.val_repeats,
+            resolution=opt.resolution
         )
         
     return config
