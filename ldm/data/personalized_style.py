@@ -4,7 +4,7 @@ import PIL
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
-
+from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
 import random
 
 imagenet_templates_small = [
@@ -55,43 +55,44 @@ per_img_token_list = [
 
 class PersonalizedBase(Dataset):
     def __init__(self,
+                 arg = JoePennaDreamboothConfigSchemaV1,
                  data_root,
-                 size=None,
-                 repeats=100,
-                 interpolation="bicubic",
-                 flip_p=0.5,
+                 size,
+                 repeats,
+                 interpolation,
+                 flip_p,
                  set="train",
-                 placeholder_token="*",
-                 per_image_tokens=False,
+                 placeholder_token,
+                 per_image_tokens=,
                  center_crop=False,
                  ):
 
+        self.arg = arg
         self.data_root = data_root
-
         self.image_paths = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
 
         # self._length = len(self.image_paths)
         self.num_images = len(self.image_paths)
         self._length = self.num_images 
 
-        self.placeholder_token = placeholder_token
+        self.placeholder_token = arg.token
 
-        self.per_image_tokens = per_image_tokens
+        self.per_image_tokens = arg.per_image_tokens
         self.center_crop = center_crop
 
         if per_image_tokens:
             assert self.num_images < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if set == "train":
-            self._length = self.num_images * repeats
+            self._length = self.num_images * arg.repeats
 
-        self.size = size
+        self.size = arg.resolution
         self.interpolation = {"linear": PIL.Image.LINEAR,
                               "bilinear": PIL.Image.BILINEAR,
                               "bicubic": PIL.Image.BICUBIC,
                               "lanczos": PIL.Image.LANCZOS,
-                              }[interpolation]
-        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
+                              }[arg.sampler]
+        self.flip = transforms.RandomHorizontalFlip(p=arg.flip_p)
 
     def __len__(self):
         return self._length
@@ -120,8 +121,11 @@ class PersonalizedBase(Dataset):
                 (w - crop) // 2:(w + crop) // 2]
 
         image = Image.fromarray(img)
-        if self.size is not None:
-            image = image.resize((self.size, self.size), resample=self.interpolation)
+        if self.size is not None and image.size > (self.size, self.size):
+            image = image.resize(
+                (self.size, self.size),
+                resample=self.interpolation
+            )
 
         image = self.flip(image)
         image = np.array(image).astype(np.uint8)
