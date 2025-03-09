@@ -121,7 +121,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--batch_size",
             type=int,
-            default=2,
+            default=1,
             required=False
         )
         parser.add_argument(
@@ -145,15 +145,15 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--resolution",
             type=int,
-            default=None,
+            default=512,
             required=False
         )
         parser.add_argument(
             "--sampler",
             type=str,
             choices=["linear", "bilinear", "bicubic", "lanczos"],
-            required=False,
-            default="bicubic"
+            default="bicubic",
+            required=False
         )
         
         return parser
