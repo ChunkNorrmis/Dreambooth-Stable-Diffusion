@@ -64,7 +64,7 @@ class PersonalizedBase(Dataset):
                  placeholder_token="sandwich",
                  per_image_tokens=False,
                  center_crop=False,
-                 arg = JoePennaDreamboothConfigSchemaV1
+                 arg: JoePennaDreamboothConfigSchemaV1
                  ):
 
         self.arg = arg
