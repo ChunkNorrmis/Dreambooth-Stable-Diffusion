@@ -28,7 +28,7 @@ class PersonalizedBase(Dataset):
                  coarse_class_text="*",
                  token_only=False,
                  reg=False,
-                 arg = JoePennaDreamboothConfigSchemaV1
+                 arg: JoePennaDreamboothConfigSchemaV1
                  ):
 
         self.arg = arg
