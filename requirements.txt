@@ -1,5 +1,4 @@
 --extra-index-url https://download.pytorch.org/whl/cu121
-pip==24.0.0
 numpy==1.26.3
 torch==2.3.1
 torchvision
