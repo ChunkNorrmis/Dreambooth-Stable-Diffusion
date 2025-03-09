@@ -10,7 +10,7 @@ from pytorch_lightning.trainer import Trainer
 from torch.utils.data import random_split, DataLoader
 
 import dreambooth_helpers.dreambooth_trainer_configurations as db_cfg
-from dreambooth_helpers.arguments import parse_arguments
+from dreambooth_helpers.arguments import parse_arguments, split_parser
 from dreambooth_helpers.dataset_helpers import WrappedDataset, ConcatDataset
 from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
 from dreambooth_helpers.copy_and_name_checkpoints import copy_and_name_checkpoints
@@ -50,9 +50,10 @@ class DataModuleFromConfig(pl.LightningDataModule):
             shuffle_val_dataloader=False
     ):
         super().__init__()
-        self.batch_size = batch_size
+        args = split_parser()
+        self.batch_size = args.batch_size
         self.dataset_configs = dict()
-        self.num_workers = num_workers if num_workers is not None else batch_size * 2
+        self.num_workers = args.num_workers if num_workers is not None else batch_size * 2
         self.use_worker_init_fn = use_worker_init_fn
         if train is not None:
             self.dataset_configs["train"] = train
