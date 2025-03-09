@@ -20,8 +20,8 @@ class JoePennaDreamboothConfigSchemaV1:
         self.debug: bool = False
         self.gpu: int = 0
         
-        self.max_training_steps: int = 2000
-        self.save_every_x_steps: int = 0
+        self.max_training_steps: int = 5000
+        self.save_every_x_steps: int = 2000
         
         self.training_images_folder_path: str = ''
         self.training_images_count: int = 0
@@ -47,18 +47,18 @@ class JoePennaDreamboothConfigSchemaV1:
         
     def saturate(
             self,
-            project_name: str,
-            max_training_steps: int,
-            save_every_x_steps: int,
-            training_images_folder_path: str,
-            regularization_images_folder_path: str,
-            token: str,
-            class_word: str,
+            project_name: str = '',
+            max_training_steps: int = 5000,
+            save_every_x_steps: int = 2000,
+            training_images_folder_path: str = '',
+            regularization_images_folder_path: str = '',
+            token: str = '',
+            class_word: str = '',
             flip_percent: float = 0.5,
             resolution: int = 512,
             sampler: str = "bicubic",
             learning_rate: float = 1.0e-06,
-            model_path: str,
+            model_path: str = '',
             config_date_time: str = None,
             seed: int = 47,
             debug: bool = False,
