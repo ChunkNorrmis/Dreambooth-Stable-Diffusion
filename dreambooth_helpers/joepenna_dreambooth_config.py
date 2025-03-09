@@ -34,14 +34,14 @@ class JoePennaDreamboothConfigSchemaV1:
         
         self.flip_percent: float = 0.5
         self.resolution: int = None
-        self.learning_rate: float = 1.0e-06
+        self.sampler: str = None
         
+        self.learning_rate: float = 1.0e-06
         self.model_repo_id: str = ''
         self.model_path: str = ''
           
         self.batch_size: int = 1
         self.num_workers: int = 1
-        
         self.repeats: int = 100
         self.val_repeats: int = 10
         
@@ -56,6 +56,7 @@ class JoePennaDreamboothConfigSchemaV1:
             class_word: str,
             flip_percent: float,
             resolution: int = None,
+            sampler: str = None,
             learning_rate: float,
             model_path: str,
             config_date_time: str = None,
@@ -70,7 +71,7 @@ class JoePennaDreamboothConfigSchemaV1:
             repeats: int = 100,
             val_repeats: int = 10,
     ):
-        # Map the values
+        
         self.project_name = project_name
         if self.project_name is None or self.project_name == '':
             raise Exception("'--project_name': Required.")
@@ -123,21 +124,24 @@ class JoePennaDreamboothConfigSchemaV1:
         self.token_only = token_only
         if token_only is False:
             self.class_word = class_word
-        
+
         self.flip_percent = flip_percent
         if self.flip_percent < 0 or self.flip_percent > 1:
             raise Exception("--flip_p: must be between 0 and 1")
         self.resolution = resolution
-        self.learning_rate = learning_rate
+        self.sampler = sampler
         
+        self.learning_rate = learning_rate
         self.model_repo_id = model_repo_id
         self.model_path = model_path
         if not os.path.exists(self.model_path):
             raise Exception(f"Model Path Not Found: '{self.model_path}'.")
+        
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.repeats = repeats
         self.val_repeats = val_repeats
+        
         self.validate_gpu_vram()
         self._create_log_folders()
     
@@ -178,6 +182,7 @@ class JoePennaDreamboothConfigSchemaV1:
                     class_word=config_parsed['class_word'],
                     flip_percent=config_parsed['flip_percent'],
                     resolution=config_parsed['resolution'],
+                    sampler=config_parsed['sampler'],
                     learning_rate=config_parsed['learning_rate'],
                     model_path=config_parsed['model_path'],
                     config_date_time=config_parsed['config_date_time'],
