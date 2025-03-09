@@ -51,7 +51,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
     ):
         super().__init__()
         parser = split_parser()
-        args = parser.parse_args()
+        args = parser.parse_knwon_args()
         
         self.batch_size = args.batch_size
         self.dataset_configs = dict()
