@@ -50,7 +50,9 @@ class DataModuleFromConfig(pl.LightningDataModule):
             shuffle_val_dataloader=False
     ):
         super().__init__()
-        args = split_parser()
+        parser = split_parser()
+        args = parser.parse_args()
+        
         self.batch_size = args.batch_size
         self.dataset_configs = dict()
         self.num_workers = args.num_workers if num_workers is not None else batch_size * 2
