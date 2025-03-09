@@ -16,17 +16,17 @@ per_img_token_list = [
 class PersonalizedBase(Dataset):
     def __init__(self,
                  data_root=os.path.relpath("../../"),
-                 size: int,
-                 repeats: int,
-                 interpolation: str,
-                 flip_p: float,
+                 size=None,
+                 repeats=100,
+                 interpolation="bicubic",
+                 flip_p=0.5,
                  set="train",
-                 placeholder_token: str,
+                 placeholder_token="sandwich",
                  per_image_tokens=False,
                  center_crop=False,
                  mixing_prob=0.25,
-                 coarse_class_text: str,
-                 token_only: bool,
+                 coarse_class_text="*",
+                 token_only=False,
                  reg=False,
                  arg = JoePennaDreamboothConfigSchemaV1
                  ):
@@ -41,7 +41,7 @@ class PersonalizedBase(Dataset):
         self._length = self.num_images
                      
         self.placeholder_token = arg.token 
-        self.token_only = arg.token_only
+        self.token_only = token_only
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
         self.mixing_prob = mixing_prob
@@ -61,8 +61,7 @@ class PersonalizedBase(Dataset):
                               "lanczos": PIL.Image.LANCZOS,
                               }[arg.sampler]
 
-        flip_p = arg.flip_percent
-        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
+        self.flip_p = transforms.RandomHorizontalFlip(p=arg.flip_percent)
         self.reg = reg
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
