@@ -55,8 +55,7 @@ per_img_token_list = [
 
 class PersonalizedBase(Dataset):
     def __init__(self,
-                 arg = JoePennaDreamboothConfigSchemaV1,
-                 data_root,
+                 data_root=os.path.relpath(../../),
                  size,
                  repeats,
                  interpolation,
@@ -65,6 +64,7 @@ class PersonalizedBase(Dataset):
                  placeholder_token,
                  per_image_tokens=False,
                  center_crop=False,
+                 arg = JoePennaDreamboothConfigSchemaV1
                  ):
 
         self.arg = arg
