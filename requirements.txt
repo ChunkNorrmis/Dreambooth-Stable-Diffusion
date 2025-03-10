@@ -1,4 +1,7 @@
 --extra-index-url https://download.pytorch.org/whl/cu121
+-e .
+-e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
+-e git+https://github.com/openai/CLIP.git@main#egg=clip
 numpy==1.26.3
 torch==2.3.1
 torchvision
@@ -16,7 +19,3 @@ kornia==0.6.7
 diffusers[training]==0.3.0
 captionizer==1.0.1
 protobuf==3.20.3
-datasets
--e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
--e git+https://github.com/openai/CLIP.git@main#egg=clip
--e .
