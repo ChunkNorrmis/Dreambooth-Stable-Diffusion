@@ -33,21 +33,20 @@ def worker_init_fn(_):
     else:
         return np.random.seed(np.random.get_state()[1][0] + worker_id)
 
-
 parser = split_parser()
-args, unknown = parser.parse_known_args()
+arg, unknown = parser.parse_known_args()
 
 class DataModuleFromConfig(pl.LightningDataModule):
     def __init__(
             self,
-            batch_size=args.batch_size,
+            batch_size=arg.batch_size,
             train="train",
             reg="reg",
-            validation="validation",
+            validation=f"{arg.train_val}",
             test=None,
             predict=None,
             wrap=False,
-            num_workers=args.num_workers,
+            num_workers=arg.num_workers,
             shuffle_test_loader=False,
             use_worker_init_fn=False,
             shuffle_val_dataloader=False
