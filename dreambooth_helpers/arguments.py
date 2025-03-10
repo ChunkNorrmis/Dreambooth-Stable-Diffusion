@@ -337,6 +337,7 @@ def split_parser() -> parse_arguments:
         "--train_val",
         type=str,
         const="validation",
+        nargs="?",
         default=None,
         required=False
     )
