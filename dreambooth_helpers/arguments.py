@@ -152,7 +152,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             "--sampler",
             type=str,
             choices=["linear", "bilinear", "bicubic", "lanczos"],
-            default="bicubic",
+            default="lanczos",
             required=False
         )
 
@@ -330,8 +330,16 @@ def split_parser() -> parse_arguments:
         "--sampler",
         type=str,
         choices=["linear", "bilinear", "bicubic", "lanczos"],
-        default="bicubic",
+        default="lanczos",
         required=False
     )
+    parser.add_argument(
+        "--train_val",
+        type=str,
+        const="validation",
+        default=None,
+        required=False
+    )
+
 
     return parser
