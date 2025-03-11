@@ -8,7 +8,7 @@ from torchvision import transforms
 from captionizer import caption_from_path, generic_captions_from_path
 from captionizer import find_images
 from dreambooth_helpers.arguments import split_parse
-
+import argparse
 
 per_img_token_list = [
     'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
