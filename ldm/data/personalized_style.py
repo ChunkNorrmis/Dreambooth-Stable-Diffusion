@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 from dreambooth_helpers.arguments import split_parse
 import random
+import argparse
 
 imagenet_templates_small = [
     'a painting in the style of {}',
@@ -54,7 +55,7 @@ per_img_token_list = [
 ]
 
 parser = split_parse()
-arg = parser.parse_known_args()
+arg = parser.parse_args()
 
 class PersonalizedBase(Dataset):
     def __init__(self,
