@@ -24,70 +24,56 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             default=None,
             help="A config file containing all of your variables"
         )
-
         parser.add_argument(
             "--project_name",
             type=str,
-            required=False,
-            default=None,
+            required=True,
             help="Name of the project"
         )
         parser.add_argument(
             "--debug",
-            type=str2bool,
-            nargs="?",
-            const=True,
-            default=False,
+            action="store_true",
             help="Enable debug logging",
         )
         parser.add_argument(
             "--seed",
             type=int,
-            default=23,
+            default=1337,
             help="seed for seed_everything",
         )
-
         parser.add_argument(
             "--max_training_steps",
             type=int,
             required=False,
             help="Number of training steps to run"
         )
-
         parser.add_argument(
             "--token",
             type=str,
             required=False,
             help="Unique token you want to represent your trained model. Ex: firstNameLastName."
         )
-
         parser.add_argument(
             "--token_only",
-            type=str2bool,
-            const=True,
-            default=False,
-            nargs="?",
+            action="store_true",
             help="Train only using the token and no class."
         )
-
         parser.add_argument(
             "--training_model",
             type=str,
-            required=False,
+            required=True,
             help="Path to model to train (model.ckpt)"
         )
-
         parser.add_argument(
             "--training_images",
             type=str,
-            required=False,
+            required=True,
             help="Path to training images directory"
         )
-
         parser.add_argument(
             "--regularization_images",
             type=str,
-            required=False,
+            required=True,
             help="Path to directory with regularization images"
         )
         parser.add_argument(
@@ -96,34 +82,30 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             required=False,
             help="Match class_word to the category of images you want to train. Example: 'man', 'woman', 'dog', or 'artstyle'."
         )
-
         parser.add_argument(
             "--flip_p",
             type=float,
             required=False,
-            default=0.5,
+            default=0.0,
             help="Flip Percentage "
-                 "Example: if set to 0.5, will flip (mirror) your training images 50% of the time."
-                 "This helps expand your dataset without needing to include more training images."
-                 "This can lead to worse results for face training since most people's faces are not perfectly symmetrical."
+                    "Example: if set to 0.5, will flip (mirror) your training images 50% of the time."
+                    "This helps expand your dataset without needing to include more training images."
+                    "This can lead to worse results for face training since most people's faces are not perfectly symmetrical."
         )
-
         parser.add_argument(
             "--learning_rate",
             type=float,
             required=False,
-            default=1.0e-06,
+            default=5.0e-07,
             help="Set the learning rate. Defaults to 1.0e-06 (0.000001).  Accepts scientific notation."
         )
-
         parser.add_argument(
             "--save_every_x_steps",
             type=int,
             required=False,
-            default=0,
+            default=1500,
             help="Saves a checkpoint every x steps"
         )
-
         parser.add_argument(
             "--gpu",
             type=int,
@@ -131,6 +113,52 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             required=False,
             help="Specify a GPU other than 0 to use for training.  Multi-GPU support is not currently implemented."
         )
+        parser.add_argument(
+            "--batch_size",
+            type=int,
+            default=2,
+            required=False
+        )
+        parser.add_argument(
+            "--num_workers",
+            type=int,
+            default=0,
+            required=False
+        )
+        parser.add_argument(
+            "--repeats",
+            type=int,
+            default=100,
+            required=False
+        )
+        parser.add_argument(
+            "--val_repeats",
+            type=int,
+            default=10,
+            required=False
+        )
+        parser.add_argument(
+            "--resolution",
+            type=int,
+            default=None,
+            required=False
+        )
+        parser.add_argument(
+            "--sampler",
+            type=str,
+            choices=["linear", "bilinear", "bicubic", "lanczos"],
+            default="lanczos",
+            required=False
+        )
+        parser.add_argument(
+            "--train_val",
+            type=str,
+            const="validation",
+            nargs="?",
+            default=None,
+            required=False
+        )
+
 
         return parser
 
@@ -161,3 +189,126 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         )
 
     return config
+
+def split_parse():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--config_file_path",
+        type=str,
+        required=False,
+        default=None,
+        help="A config file containing all of your variables"
+    )
+    parser.add_argument(
+        "--project_name",
+        type=str,
+        required=True,
+        help="Name of the project"
+    )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Enable debug logging",
+    )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=1337,
+        help="seed for seed_everything",
+    )
+    parser.add_argument(
+        "--max_training_steps",
+        type=int,
+        default=5000,
+        required=False,
+        help="Number of training steps to run"
+    )
+    parser.add_argument(
+        "--token",
+        type=str,
+        required=False,
+        help="Unique token you want to represent your trained model. Ex: firstNameLastName."
+    )
+    parser.add_argument(
+        "--token_only",
+        action="store_true",
+        help="Train only using the token and no class."
+    )
+    parser.add_argument(
+        "--training_model",
+        type=str,
+        required=True,
+        help="Path to model to train (model.ckpt)"
+    )
+    parser.add_argument(
+        "--training_images",
+        type=str,
+        required=True,
+        help="Path to training images directory"
+    )
+    parser.add_argument(
+        "--regularization_images",
+        type=str,
+        required=True,
+        help="Path to directory with regularization images"
+    )
+    parser.add_argument(
+        "--class_word",
+        type=str,
+        required=False,
+        help="Match class_word to the category of images you want to train. Example: 'man', 'woman', 'dog', or 'artstyle'."
+    )
+    parser.add_argument(
+        "--flip_p",
+        type=float,
+        required=False,
+        default=0.0,
+    )
+    parser.add_argument(
+        "--batch_size",
+        type=int,
+        default=2,
+        required=False
+    )
+    parser.add_argument(
+        "--num_workers",
+        type=int,
+        default=0,
+        required=False
+    )
+    parser.add_argument(
+        "--repeats",
+        type=int,
+        default=100,
+        required=False
+    )
+    parser.add_argument(
+        "--val_repeats",
+        type=int,
+        default=10,
+        required=False
+    )
+    parser.add_argument(
+        "--resolution",
+        type=int,
+        default=None,
+        required=False
+    )
+    parser.add_argument(
+        "--sampler",
+        type=str,
+        choices=["linear", "bilinear", "bicubic", "lanczos"],
+        default="lanczos",
+        required=False
+    )
+    parser.add_argument(
+        "--train_val",
+        type=str,
+        const="validation",
+        nargs="?",
+        default=None,
+        required=False
+    )
+
+    return parser
+
