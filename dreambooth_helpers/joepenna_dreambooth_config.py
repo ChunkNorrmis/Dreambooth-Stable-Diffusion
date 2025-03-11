@@ -18,13 +18,13 @@ class JoePennaDreamboothConfigSchemaV1:
 
         # Project
         self.project_name: str = ''
-        self.seed: int = 23
+        self.seed: int = 1337
         self.debug: bool = False
         self.gpu: int = 0
 
         # Training Steps
-        self.max_training_steps: int = 2000
-        self.save_every_x_steps: int = 0
+        self.max_training_steps: int = 5000
+        self.save_every_x_steps: int = 1500
 
         # Training & Regularization Images
         self.training_images_folder_path: str = ''
@@ -38,12 +38,20 @@ class JoePennaDreamboothConfigSchemaV1:
         self.class_word: str = ''
 
         # Training Params
-        self.flip_percent: float = 0.5
-        self.learning_rate: float = 1.0e-06
+        self.flip_percent: float = 0.0
+        self.learning_rate: float = 5.0e-07
 
         # Model Info
         self.model_repo_id: str = ''
         self.model_path: str = ''
+
+        self.batch_size: int = 2
+        self.num_workers: int = 0
+        self.repeats: int = 100
+        self.val_repeats: int = 10
+
+        self.resolution: int = None
+        self.sampler: str = 'lanczos'
 
     def saturate(
             self,
@@ -58,12 +66,18 @@ class JoePennaDreamboothConfigSchemaV1:
             learning_rate: float,
             model_path: str,
             config_date_time: str = None,
-            seed: int = 23,
+            seed: int = 1337,
             debug: bool = False,
             gpu: int = 0,
             model_repo_id: str = '',
             token_only: bool = False,
             run_seed_everything: bool = True,
+            batch_size: int = 2,
+            num_workers: int = 0,
+            repeats: int = 100,
+            val_repeats: int = 10,
+            resolution: int = None,
+            sampler: str = 'lanczos'
     ):
 
         # Map the values
@@ -140,6 +154,13 @@ class JoePennaDreamboothConfigSchemaV1:
         if not os.path.exists(self.model_path):
             raise Exception(f"Model Path Not Found: '{self.model_path}'.")
 
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+        self.repeats = repeats
+        self.val_repeats = val_repeats
+        self.resolution = resolution
+        self.sampler = sampler
+
         self.validate_gpu_vram()
 
         self._create_log_folders()
@@ -191,6 +212,12 @@ class JoePennaDreamboothConfigSchemaV1:
                     gpu=config_parsed['gpu'],
                     model_repo_id=config_parsed['model_repo_id'],
                     token_only=config_parsed['token_only'],
+                    batch_size=config_parsed['batch_size'],
+                    num_workers=config_parsed['num_workers'],
+                    repeats=config_parsed['repeats'],
+                    val_repeats=config_parsed['val_repeats'],
+                    resolution=config_parsed['resolution'],
+                    sampler=config_parsed['sampler'],
                 )
             else:
                 print(f"Unrecognized schema: {config_parsed['schema']}", file=sys.stderr)
@@ -247,3 +274,4 @@ class JoePennaDreamboothConfigSchemaV1:
         os.makedirs(self.log_checkpoint_directory(), exist_ok=True)
         os.makedirs(self.log_config_directory(), exist_ok=True)
         os.makedirs(self.trained_models_directory(), exist_ok=True)
+
