@@ -4,7 +4,7 @@ import PIL
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
-
+from dreambooth_helpers.arguments import split_parse
 import random
 
 imagenet_templates_small = [
@@ -53,18 +53,22 @@ per_img_token_list = [
     'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
 ]
 
+parser = split_parse()
+arg = parser.parse_known_args()
+
 class PersonalizedBase(Dataset):
     def __init__(self,
                  data_root,
-                 size=None,
-                 repeats=100,
-                 interpolation="bicubic",
-                 flip_p=0.5,
+                 size=arg.resolution,
+                 repeats=arg.repeats,
+                 interpolation=arg.sampler,
+                 flip_p=arg.flip_p,
                  set="train",
-                 placeholder_token="*",
+                 placeholder_token=arg.token,
                  per_image_tokens=False,
                  center_crop=False,
                  ):
+        super(PersonalizedBase).__init__()
 
         self.data_root = data_root
 
@@ -72,7 +76,7 @@ class PersonalizedBase(Dataset):
 
         # self._length = len(self.image_paths)
         self.num_images = len(self.image_paths)
-        self._length = self.num_images 
+        self._length = self.num_images
 
         self.placeholder_token = placeholder_token
 
@@ -107,12 +111,12 @@ class PersonalizedBase(Dataset):
             text = random.choice(imagenet_dual_templates_small).format(self.placeholder_token, per_img_token_list[i % self.num_images])
         else:
             text = random.choice(imagenet_templates_small).format(self.placeholder_token)
-            
+
         example["caption"] = text
 
         # default to score-sde preprocessing
         img = np.array(image).astype(np.uint8)
-        
+
         if self.center_crop:
             crop = min(img.shape[0], img.shape[1])
             h, w, = img.shape[0], img.shape[1]
@@ -120,10 +124,13 @@ class PersonalizedBase(Dataset):
                 (w - crop) // 2:(w + crop) // 2]
 
         image = Image.fromarray(img)
-        if self.size is not None:
-            image = image.resize((self.size, self.size), resample=self.interpolation)
+        if self.size is not None and image.size > (self.size, self.size):
+            image = image.resize(
+                size=(self.size, self.size),
+                resample=self.interpolation)
 
         image = self.flip(image)
         image = np.array(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
+
