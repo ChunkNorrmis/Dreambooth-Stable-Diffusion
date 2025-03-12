@@ -166,11 +166,11 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
     reg_block = {
         "target": "ldm.data.personalized.PersonalizedBase",
         "params": {
-            "size": 512,
+            "size": config.resolution,
             "set": "train",
             "reg": True,
             "per_image_tokens": False,
-            "repeats": 10,
+            "repeats": config.val_repeats,
             "data_root": config.regularization_images_folder_path,
             "coarse_class_text": config.class_word,
             "placeholder_token": config.token,
@@ -180,16 +180,16 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
     data_config = {
         "target": "main.DataModuleFromConfig",
         "params": {
-            "batch_size": 1,
-            "num_workers": 1,
+            "batch_size": config.batch_size,
+            "num_workers": config.num_workers,
             "wrap": False,
             "train": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
-                    "size": 512,
+                    "size": config.resolution,
                     "set": "train",
                     "per_image_tokens": False,
-                    "repeats": 100,
+                    "repeats": config.repeats,
                     "coarse_class_text": config.class_word,
                     "data_root": config.training_images_folder_path,
                     "placeholder_token": config.token,
@@ -201,10 +201,10 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "validation": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
-                    "size": 512,
+                    "size": config.resolution,
                     "set": "val",
                     "per_image_tokens": False,
-                    "repeats": 10,
+                    "repeats": config.val_repeats,
                     "coarse_class_text": config.class_word,
                     "placeholder_token": config.token,
                     "data_root": config.training_images_folder_path,
