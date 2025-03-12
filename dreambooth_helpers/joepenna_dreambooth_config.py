@@ -46,7 +46,7 @@ class JoePennaDreamboothConfigSchemaV1:
         self.model_path: str = ''
 
         self.batch_size: int = 2
-        self.num_workers: int = 0
+        self.num_workers: int = 1
         self.repeats: int = 100
         self.val_repeats: int = 10
 
@@ -226,12 +226,8 @@ class JoePennaDreamboothConfigSchemaV1:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
     def create_checkpoint_file_name(self, steps: str):
-        date_string = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S")
-        return f"{date_string}_{self.project_name}_" \
-               f"{int(steps):05d}_steps_" \
-               f"{self.training_images_count}_training_images_" \
-               f"{self.token}_token_" \
-               f"{self.class_word}_class_word.ckpt".replace(" ", "_")
+        date_string = datetime.now(timezone.utc).strftime("%m-%dT%H-%M")
+        return f"{date_string}_{self.project_name}_{int(steps):05d}_steps.ckpt".replace(" ", "_")
 
     def save_config_to_file(
             self,
