@@ -137,7 +137,7 @@ From within the My Pods page,
 ### Install Dependencies and Activate Environment
 ```bash
 $ python3.10 -m venv dream-venv
-(dream-venv):~/Dreambooth-Stable-Diffusion$ source ./dream-venv/bin/activate
+$ source ./dream-venv/bin/activate
 (dream-venv):..$ pip install -U pip==24.0 wheel
 (dream-venv):..$ pip install --no-cache-dir -r ./requirements.txt
 ```
