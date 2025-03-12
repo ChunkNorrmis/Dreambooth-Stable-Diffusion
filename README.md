@@ -300,7 +300,7 @@ python "main.py" --config_file_path "path/to/the/my-config.json"
 | `--resize` | *Toggle* | --resize | *Optional* Default is off. Toggles the downsizing of only oversized images to 512 x 512 for training. 
 | `--repeats` | int | 455 | *Optional* Defaults to `100`. Sets number of training image repeats during training.
 | `--val_repeats` | int | 69 | *Optional* Defaults to `10`. Sets the number of validation image repeats during traing.
-| `--batch_size` | int | 80085 | *Optional* Defaults to `1`. Set's the number of images to train at a time per repeat (also divides the total training steps into an amount of epochs of the same value for some reason. e.g. 2100 steps w/ batch size of 3 will be 3, 700 step epochs)
+| `--batch_size` | int | 80085 | *Optional* Defaults to `1`. Set's the number of images to train at a time per repeat (also divides the total training steps into an amount of epochs equal to the same value. e.g. 2100 steps w/ batch size of 3 will yield 3, 700-step epochs)
 | `--num_workers` | int | 1 | *Optional* Defaults to `0`. Specifies the number of subprocesses (workers) to use for data processing during training, set to 0 to keep all processing in main process. ***(actual number of workers deployed is twice this value. setting this higher than 1 is rarely necessary for a single 24GB VRAM video card. Max batch size that a 4090 can handle with stock settings is about 5)***. 
 | `--train_val` | *Toggle* | --train_val | *Optional* Toggles on image validation steps during training.
 
