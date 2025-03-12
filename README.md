@@ -121,33 +121,33 @@ From within the My Pods page,
   - ![img.png](readme-images/vast-ai-step6-open-notebook.png)
 - Follow the instructions in the workbook and start training
 
-## <a name="running-locally"></a> Running Locally Instructions
+## <a name="running-locally"></a> Running Locally Instructions (linux)
 
 ### <a name="running-locally-venv"></a> Setup - Virtual Environment
 
 ### Pre-Requisites
-1. [Git](https://gitforwindows.org/)
-2. [Python 3.10](https://www.python.org/downloads/)
-3. Open `cmd`
-4. Clone the repository
-   1. `C:\>git clone https://github.com/JoePenna/Dreambooth-Stable-Diffusion`
+1. Open `bash` or similar shell terminal
+2. download git and python3.10 through your distros package repository
+  e.g. `$ apt install -y git python3.10-full` or you may optionally build them from their source code available on their respective websites 
+3. Clone the repository
+   `$ git clone https://github.com/ChunkNorrmis/Dreambooth-Stable-Diffusion`
 5. Navigate into the repository
-   1. `C:\>cd Dreambooth-Stable-Diffusion`
+   `$ cd ./Dreambooth-Stable-Diffusion`
 
 ### Install Dependencies and Activate Environment
-```cmd
-cmd> python -m venv dreambooth_joepenna
-cmd> dreambooth_joepenna\Scripts\activate.bat
-cmd> pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
-cmd> pip install -r requirements.txt
+```bash
+$ python3.10 -m venv dream-venv
+(dream-venv):~/Dreambooth-Stable-Diffusion$ source ./dream-venv/bin/activate
+(dream-venv):..$ pip install -U pip==24.0 wheel
+(dream-venv):..$ pip install --no-cache-dir -r ./requirements.txt
 ```
 
 #### Run
-`cmd> python "main.py" --project_name "ProjectName" --training_model "C:\v1-5-pruned-emaonly-pruned.ckpt" --regularization_images "C:\regularization_images" --training_images "C:\training_images" --max_training_steps 2000 --class_word "person" --token "zwx" --flip_p 0 --learning_rate 1.0e-06 --save_every_x_steps 250`
+`(dream-venv):..$ python main.py --project_name ProjectName --training_model v1-5-pruned-emaonly-pruned.ckpt --regularization_images regularization_images --training_images training_images --max_training_steps 5000 --class_word foodstuffs --token porkchop-sandwiches --flip_p 0.5 --learning_rate 5.0e-07 --save_every_x_steps 1500 --batch_size 2 --num_workers 1 --repeats 100 --val_repeats 10 --resolution 512 --sampler lanczos --val_train`
 
 #### Cleanup
-```cmd
-cmd> deactivate 
+```bash
+(dream-venv):..$ deactivate
 ```
 
 ### <a name="running-locally-conda"></a>  Setup - Conda
