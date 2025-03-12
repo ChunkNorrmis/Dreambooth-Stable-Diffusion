@@ -128,26 +128,26 @@ From within the My Pods page,
 ### Pre-Requisites
 1. Open `bash` or your preferred shell terminal
 2. download git and python3.10 through your distros package repository e.g.
-    `$ apt install -y git python3.10-full`
+`$ apt install -y git python3.10-full`
 4. Clone the git repository
-    `$ git clone https://github.com/ChunkNorrmis/Dreambooth-Stable-Diffusion`
+`$ git clone https://github.com/ChunkNorrmis/Dreambooth-Stable-Diffusion`
 5. Navigate into the repository
-    `$ cd ./Dreambooth-Stable-Diffusion`
+`$ cd ./Dreambooth-Stable-Diffusion`
 
 ### Install Dependencies and Activate Environment
 ```bash
-    $ python3.10 -m venv dream-venv
-    (dream-venv):~/Dreambooth-Stable-Diffusion$ source ./dream-venv/bin/activate
-    (dream-venv):..$ pip install -U pip==24.0 wheel
-    (dream-venv):..$ pip install --no-cache-dir -r ./requirements.txt
+$ python3.10 -m venv dream-venv
+(dream-venv):~/Dreambooth-Stable-Diffusion$ source ./dream-venv/bin/activate
+(dream-venv):..$ pip install -U pip==24.0 wheel
+(dream-venv):..$ pip install --no-cache-dir -r ./requirements.txt
 ```
 
 #### Run
-    `(dream-venv):..$ python main.py --project_name ProjectName --training_model v1-5-pruned-emaonly-pruned.ckpt --regularization_images regularization_images --training_images training_images --max_training_steps 5000 --class_word foodstuffs --token porkchop-sandwiches --flip_p 0.5 --learning_rate 5.0e-07 --save_every_x_steps 1500 --batch_size 2 --num_workers 1 --repeats 100 --val_repeats 10 --resolution 512 --sampler lanczos --val_train`
+`(dream-venv):..$ python main.py --project_name ProjectName --training_model v1-5-pruned-emaonly-pruned.ckpt --regularization_images regularization_images --training_images training_images --max_training_steps 5000 --class_word foodstuffs --token porkchop-sandwiches --flip_p 0.5 --learning_rate 5.0e-07 --save_every_x_steps 1500 --batch_size 2 --num_workers 1 --repeats 100 --val_repeats 10 --resolution 512 --sampler lanczos --val_train`
 
 #### Cleanup
 ```bash
-    (dream-venv):..$ deactivate
+(dream-venv):..$ deactivate
 ```
 
 ### <a name="running-locally-conda"></a>  Setup - Conda
