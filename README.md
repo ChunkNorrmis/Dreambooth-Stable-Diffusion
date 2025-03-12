@@ -294,15 +294,15 @@ python "main.py" --config_file_path "path/to/the/my-config.json"
 | `--class_word` | string | `"foodstuffs"` | Match class_word to the category of images you want to train. Example: `man`, `woman`, `dog`, or `artstyle`. |
 | `--flip_p` | float | `0.5` | *Optional* Defaults to `0.0`. Flip Percentage. Example: if set to `0.5`, will flip (mirror) your training images 50% of the time. This helps expand your dataset without needing to include more training images. This can lead to worse results for face training since most people's faces are not perfectly symmetrical. |
 | `--learning_rate` | float | `5.0e-07` | *Optional* Defaults to `5.0e-07` (0.0000005). Set the learning rate. Accepts scientific notation. |
-| `--save_every_x_steps` | int | `627` | *Optional* Defaults to `1500`. Saves a checkpoint every x steps.   At `0` only saves at the end of training when `max_training_steps` is reached. |
+| `--save_every_x_steps` | int | `622` | *Optional* Defaults to `1500`. Saves a checkpoint every x steps.   At `0` only saves at the end of training when `max_training_steps` is reached. |
 | `--gpu` | int | `0` | *Optional* Defaults to `0`. Specify a GPU other than 0 to use for training.  Multi-GPU support is not currently implemented.
-| `--resolution` | int | `512` | *Optional* Defaults to `512`. Sets the image resolution for training (resolution^2).
-| `--resize` | *Optional* Default is off. Toggles the downsizing of only oversized images to 512 x 512 for training. 
-| `--repeats` | int | *Optional* Defaults to `100`. Sets number of training image repeats during training.
-| `--val_repeats` | int | *Optional* Defaults to `10`. Sets the number of validation image repeats during traing.
-| `--batch_size` | int | *Optional* Defaults to `1`. Set's the number of images to train at a time per repeat (also divides the total training steps into an amount of epochs of the same value for some reason. e.g. 2100 steps w/ batch size of 3 will be 3, 700 step epochs)
-| `--num_workers` | int | *Optional* Defaults to `0`. Specifies the number of subprocesses (workers) to use for data processing during training, set to 0 to keep all processing in main process. ***(actual number of workers deployed is twice this value. setting this higher than 1 is rarely necessary for a single 24GB VRAM video card. Max batch size that a 4090 can handle with stock settings is about 5)***. 
-| `--train_val` | *Optional* Toggles on image validation steps during training.
+| `--resolution` | int | `7` | *Optional* Defaults to `512`. Sets the image resolution for training (resolution^2).
+| `--resize` | *Toggle* | --resize | *Optional* Default is off. Toggles the downsizing of only oversized images to 512 x 512 for training. 
+| `--repeats` | int | 455 | *Optional* Defaults to `100`. Sets number of training image repeats during training.
+| `--val_repeats` | int | 69 | *Optional* Defaults to `10`. Sets the number of validation image repeats during traing.
+| `--batch_size` | int | 80085 | *Optional* Defaults to `1`. Set's the number of images to train at a time per repeat (also divides the total training steps into an amount of epochs of the same value for some reason. e.g. 2100 steps w/ batch size of 3 will be 3, 700 step epochs)
+| `--num_workers` | int | 1 | *Optional* Defaults to `0`. Specifies the number of subprocesses (workers) to use for data processing during training, set to 0 to keep all processing in main process. ***(actual number of workers deployed is twice this value. setting this higher than 1 is rarely necessary for a single 24GB VRAM video card. Max batch size that a 4090 can handle with stock settings is about 5)***. 
+| `--train_val` | *Toggle* | --train_val | *Optional* Toggles on image validation steps during training.
 
 ### Using your configuration for training
 
