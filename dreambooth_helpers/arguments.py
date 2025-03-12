@@ -122,7 +122,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--num_workers",
             type=int,
-            default=0,
+            default=1,
             required=False
         )
         parser.add_argument(
@@ -140,7 +140,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--resolution",
             type=int,
-            default=None,
+            default=512,
             required=False
         )
         parser.add_argument(
@@ -273,7 +273,7 @@ def split_parse():
     parser.add_argument(
         "--num_workers",
         type=int,
-        default=0,
+        default=1,
         required=False
     )
     parser.add_argument(
