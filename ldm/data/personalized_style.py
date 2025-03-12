@@ -55,7 +55,7 @@ per_img_token_list = [
 ]
 
 parser = split_parse()
-arg = parser.parse_args()
+arg, unknown = parser.parse_args()
 
 class PersonalizedBase(Dataset):
     def __init__(self,
