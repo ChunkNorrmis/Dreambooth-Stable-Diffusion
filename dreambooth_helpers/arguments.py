@@ -206,11 +206,6 @@ def split_parse():
         help="Name of the project"
     )
     parser.add_argument(
-        "--debug",
-        action="store_true",
-        help="Enable debug logging",
-    )
-    parser.add_argument(
         "--seed",
         type=int,
         default=1337,
@@ -289,7 +284,7 @@ def split_parse():
         required=False
     )
     parser.add_argument(
-        "--resolution",
+        "--resize",
         type=int,
         default=None,
         required=False
