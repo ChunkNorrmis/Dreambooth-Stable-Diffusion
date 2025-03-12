@@ -285,7 +285,8 @@ def split_parse():
     )
     parser.add_argument(
         "--resize",
-        type=int,
+        const=512,
+        nargs="?",
         default=None,
         required=False
     )
