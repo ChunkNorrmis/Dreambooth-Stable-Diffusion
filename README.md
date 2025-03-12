@@ -128,11 +128,17 @@ From within the My Pods page,
 ### Pre-Requisites
 1. Open `bash` or your preferred shell terminal
 2. download git and python3.10 through your distros package repository e.g.
-`$ apt install -y git python3.10-full`
+```bash
+$ apt install -y git python3.10-full
+```
 4. Clone the git repository
-`$ git clone https://github.com/ChunkNorrmis/Dreambooth-Stable-Diffusion`
-5. Navigate into the repository
-`$ cd ./Dreambooth-Stable-Diffusion`
+```bash
+$ git clone https://github.com/ChunkNorrmis/Dreambooth-Stable-Diffusion
+```
+6. Navigate into the repository
+```bash
+$ cd ./Dreambooth-Stable-Diffusion
+```
 
 ### Install Dependencies and Activate Environment
 ```bash
@@ -140,10 +146,30 @@ $ python3.10 -m venv dream-venv
 $ source ./dream-venv/bin/activate
 (dream-venv):..$ pip install -U pip==24.0 wheel
 (dream-venv):..$ pip install --no-cache-dir -r ./requirements.txt
+(dream-venv):..$ huggingface_cli download 'stable-diffusion-v1-5/stable-diffusion-v1-5' 'v1-5-pruned.ckpt' --local-dir .
 ```
 
 #### Run
-`(dream-venv):..$ python main.py --project_name ProjectName --training_model v1-5-pruned-emaonly-pruned.ckpt --regularization_images regularization_images --training_images training_images --max_training_steps 5000 --class_word foodstuffs --token porkchop-sandwiches --flip_p 0.5 --learning_rate 5.0e-07 --save_every_x_steps 1500 --batch_size 2 --num_workers 1 --repeats 100 --val_repeats 10 --resolution 512 --sampler lanczos --val_train`
+```bash
+(dream-venv):..$ python main.py \
+--project_name ProjectName \
+--training_model v1-5-pruned-pruned.ckpt \
+--regularization_images regularization_images \
+--training_images training_images \
+--max_training_steps 5000 \
+--class_word foodstuffs \
+--token porkchop-sandwiches \
+--flip_p 0.5 \
+--learning_rate 5.0e-07 \
+--save_every_x_steps 1500 \
+--batch_size 2 \
+--num_workers 1 \
+--repeats 100 \
+--val_repeats 10 \
+--sampler lanczos \
+--resolution 512 \
+--resize 512
+```
 
 #### Cleanup
 ```bash
@@ -243,21 +269,28 @@ python "main.py" --config_file_path "path/to/the/my-config.json"
 
 | Command | Type | Example | Description |
 | ------- | ---- | ------- | ----------- |
-| `--config_file_path` | string | `"C:\\Users\\David\\Dreambooth Configs\\my-config.json"` | The path the configuration file to use |
+| `--config_file_path` | string | The path the configuration file to use |
 | `--project_name` | string | `"My Project Name"` | Name of the project |
 | `--debug` | bool | `False` | *Optional* Defaults to `False`. Enable debug logging |
-| `--seed` | int | `23` | *Optional* Defaults to `23`. Seed for seed_everything |
-| `--max_training_steps` | int | `3000` | Number of training steps to run |
-| `--token` | string | `"owhx"` | Unique token you want to represent your trained model. |
+| `--seed` | int | `1337` | *Optional* Defaults to `1337`. Seed for seed_everything |
+| `--max_training_steps` | int | `5000` | Number of training steps to run |
+| `--token` | string | `porkchop-sandwiches` | Unique token you want to represent your trained model. |
 | `--token_only` | bool | `False` | *Optional* Defaults to `False`. Train only using the token and no class. |
-| `--training_model` | string | `"D:\\stable-diffusion\\models\\v1-5-pruned-emaonly-pruned.ckpt"` | Path to model to train (model.ckpt) |
-| `--training_images` | string | `"D:\\stable-diffusion\\training_images\\24 Images - captioned"` | Path to training images directory |
-| `--regularization_images` | string | `"D:\\stable-diffusion\\regularization_images\\Stable-Diffusion-Regularization-Images-person_ddim\\person_ddim"` | Path to directory with regularization images |
-| `--class_word` | string | `"woman"` | Match class_word to the category of images you want to train. Example: `man`, `woman`, `dog`, or `artstyle`. |
-| `--flip_p` | float | `0.0` | *Optional* Defaults to `0.5`. Flip Percentage. Example: if set to `0.5`, will flip (mirror) your training images 50% of the time. This helps expand your dataset without needing to include more training images. This can lead to worse results for face training since most people's faces are not perfectly symmetrical. |
-| `--learning_rate` | float | `1.0e-06` | *Optional* Defaults to `1.0e-06` (0.000001). Set the learning rate. Accepts scientific notation. |
-| `--save_every_x_steps` | int | `250` | *Optional* Defaults to `0`. Saves a checkpoint every x steps.   At `0` only saves at the end of training when `max_training_steps` is reached. |
+| `--training_model` | string | `v1-5-pruned.ckpt` | Path to model to train (model.ckpt) |
+| `--training_images` | string | `training_images` | Path to training images directory |
+| `--regularization_images` | string | `regularization_images` | Path to directory with regularization images |
+| `--class_word` | string | `"foodstuffs"` | Match class_word to the category of images you want to train. Example: `man`, `woman`, `dog`, or `artstyle`. |
+| `--flip_p` | float | `0.5` | *Optional* Defaults to `0.0`. Flip Percentage. Example: if set to `0.5`, will flip (mirror) your training images 50% of the time. This helps expand your dataset without needing to include more training images. This can lead to worse results for face training since most people's faces are not perfectly symmetrical. |
+| `--learning_rate` | float | `5.0e-07` | *Optional* Defaults to `5.0e-07` (0.0000005). Set the learning rate. Accepts scientific notation. |
+| `--save_every_x_steps` | int | `627` | *Optional* Defaults to `1500`. Saves a checkpoint every x steps.   At `0` only saves at the end of training when `max_training_steps` is reached. |
 | `--gpu` | int | `0` | *Optional* Defaults to `0`. Specify a GPU other than 0 to use for training.  Multi-GPU support is not currently implemented.
+| `--resolution` | int | `512` | *Optional* Defaults to `512`. Sets the image resolution for training (resolution^2).
+| `--resize` | *Optional* Default is off. Toggles the downsizing of only oversized images to 512 x 512 for training. 
+| `--repeats` | int | *Optional* Defaults to `100`. Sets number of training image repeats during training.
+| `--val_repeats` | int | *Optional* Defaults to `10`. Sets the number of validation image repeats during traing.
+| `--batch_size` | int | *Optional* Defaults to `1`. Set's the number of images to train at a time per repeat (also divides the total training steps into an amount of epochs of the same value for some reason. e.g. 2100 steps w/ batch size of 3 will be 3, 700 step epochs)
+| `--num_workers` | int | *Optional* Defaults to `0`. Specifies the number of subprocesses (workers) to use for data processing during training. 
+| `--train_val` | *Optional* Toggles on image validation steps during training.
 
 ### Using your configuration for training
 
