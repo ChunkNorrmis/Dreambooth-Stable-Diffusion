@@ -149,26 +149,38 @@ $ source ./dream-venv/bin/activate
 (dream-venv):..$ huggingface_cli download 'stable-diffusion-v1-5/stable-diffusion-v1-5' 'v1-5-pruned.ckpt' --local-dir .
 ```
 
+***Optionally some other variations of the same sd-v1-5 model below, if you prefer to use them instead.***
+
+*sd v1.5 ema-only:*
+```
+huggingface_cli download 'stable-diffusion-v1-5/stable-diffusion-v1-5' 'v1-5-pruned-emaonly.ckpt' --local-dir .
+```
+*sd v1.5 with improved vae:*
+```
+huggingface_cli download 'panopstor/EveryDream' 'sd_v1-5_vae.ckpt' --local-dir .
+```
+
 #### Run
 ```bash
 (dream-venv):..$ python main.py \
 --project_name ProjectName \
---training_model v1-5-pruned-pruned.ckpt \
+--training_model v1-5-pruned.ckpt \
 --regularization_images regularization_images \
 --training_images training_images \
 --max_training_steps 5000 \
 --class_word foodstuffs \
 --token porkchop-sandwiches \
---flip_p 0.5 \
+--flip_p 0.0 \
 --learning_rate 5.0e-07 \
 --save_every_x_steps 1500 \
 --batch_size 2 \
 --num_workers 1 \
 --repeats 100 \
---val_repeats 10 \
+--val_repeats 5 \
 --sampler lanczos \
 --resolution 512 \
---resize 512
+--resize \
+--train_val
 ```
 
 #### Cleanup
