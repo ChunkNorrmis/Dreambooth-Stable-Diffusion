@@ -60,7 +60,7 @@ arg, unknown = parser.parse_args()
 class PersonalizedBase(Dataset):
     def __init__(self,
                  data_root,
-                 size=arg.resolution,
+                 size=arg.resize,
                  repeats=arg.repeats,
                  interpolation=arg.sampler,
                  flip_p=arg.flip_p,
