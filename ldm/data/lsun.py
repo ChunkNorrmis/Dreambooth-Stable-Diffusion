@@ -53,7 +53,7 @@ class LSUNBase(Dataset):
               (w - crop) // 2:(w + crop) // 2]
 
         image = Image.fromarray(img)
-        if self.size is not None and not image.size == (self.size, self.size):
+        if self.size is not None and image.size > (self.size, self.size):
             image = image.resize(
                 (self.size, self.size),
                 resample=self.interpolation
