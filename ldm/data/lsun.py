@@ -4,15 +4,18 @@ import PIL
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
+from dreambooth_helpers.arguments import split_parse
 
+parser = split_parse()
+arg = parser.parse_args()
 
 class LSUNBase(Dataset):
     def __init__(self,
                  txt_file,
                  data_root,
-                 size=None,
-                 interpolation="bicubic",
-                 flip_p=0.5
+                 size=arg.resize,
+                 interpolation=arg.resampler,
+                 flip_p=arg.flip_p
                  ):
         self.data_paths = txt_file
         self.data_root = data_root
@@ -50,8 +53,11 @@ class LSUNBase(Dataset):
               (w - crop) // 2:(w + crop) // 2]
 
         image = Image.fromarray(img)
-        if self.size is not None:
-            image = image.resize((self.size, self.size), resample=self.interpolation)
+        if self.size is not None and not image.size == (self.size, self.size):
+            image = image.resize(
+                (self.size, self.size),
+                resample=self.interpolation
+            )
 
         image = self.flip(image)
         image = np.array(image).astype(np.uint8)
@@ -76,7 +82,7 @@ class LSUNBedroomsTrain(LSUNBase):
 
 
 class LSUNBedroomsValidation(LSUNBase):
-    def __init__(self, flip_p=0.0, **kwargs):
+    def __init__(self, flip_p=arg.flip_p, **kwargs):
         super().__init__(txt_file="data/lsun/bedrooms_val.txt", data_root="data/lsun/bedrooms",
                          flip_p=flip_p, **kwargs)
 
@@ -87,6 +93,6 @@ class LSUNCatsTrain(LSUNBase):
 
 
 class LSUNCatsValidation(LSUNBase):
-    def __init__(self, flip_p=0., **kwargs):
+    def __init__(self, flip_p=arg.flip_p, **kwargs):
         super().__init__(txt_file="data/lsun/cat_val.txt", data_root="data/lsun/cats",
                          flip_p=flip_p, **kwargs)
