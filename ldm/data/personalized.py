@@ -98,8 +98,10 @@ class PersonalizedBase(Dataset):
         image = Image.fromarray(img)
         if self.size is not None and image.size > (self.size, self.size):
             image = image.resize(
-                size=(self.size, self.size),
-                resample=self.interpolation)
+                (self.size, self.size),
+                resample=self.interpolation,
+                reducing_gap=3
+            )
 
         image = self.flip(image)
         image = np.array(image).astype(np.uint8)
