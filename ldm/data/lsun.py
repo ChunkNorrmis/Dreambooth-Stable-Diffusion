@@ -56,7 +56,8 @@ class LSUNBase(Dataset):
         if self.size is not None and image.size > (self.size, self.size):
             image = image.resize(
                 (self.size, self.size),
-                resample=self.interpolation
+                resample=self.interpolation,
+                reducing_gap=3
             )
 
         image = self.flip(image)
