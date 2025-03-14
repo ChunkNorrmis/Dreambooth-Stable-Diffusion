@@ -7,7 +7,7 @@ from torchvision import transforms
 from dreambooth_helpers.arguments import split_parse
 
 parser = split_parse()
-arg = parser.parse_args()
+arg, unknown = parser.parse_known_args()
 
 class LSUNBase(Dataset):
     def __init__(self,
