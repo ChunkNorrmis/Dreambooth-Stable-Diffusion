@@ -48,8 +48,7 @@ class JoePennaDreamboothConfigSchemaV1:
         self.batch_size: int = ''
         self.num_workers: int = ''
         self.repeats: int = ''
-        self.val_repeats: int = ''
-
+        
         self.resolution: int = ''
         self.resampler: str = ''
 
@@ -68,7 +67,6 @@ class JoePennaDreamboothConfigSchemaV1:
             batch_size: int,
             num_workers: int,
             repeats: int,
-            val_repeats: int,
             resolution: int,
             resampler: str,
             config_date_time: str = None,
