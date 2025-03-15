@@ -62,7 +62,7 @@ class PersonalizedBase(Dataset):
                  data_root,
                  size=arg.resize,
                  repeats=arg.repeats,
-                 interpolation=arg.sampler,
+                 interpolation=arg.resampler,
                  flip_p=arg.flip_p,
                  set="train",
                  placeholder_token=arg.token,
