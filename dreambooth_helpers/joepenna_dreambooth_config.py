@@ -70,7 +70,7 @@ class JoePennaDreamboothConfigSchemaV1:
             repeats: int,
             val_repeats: int,
             resolution: int,
-            resampler: str
+            resampler: str,
             config_date_time: str = None,
             seed: int = 1337,
             debug: bool = False,
