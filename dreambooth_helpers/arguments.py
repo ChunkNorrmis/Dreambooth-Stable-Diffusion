@@ -96,14 +96,14 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             "--learning_rate",
             type=float,
             required=False,
-            default=5.0e-07,
+            default=8.0e-07,
             help="Set the learning rate. Defaults to 1.0e-06 (0.000001).  Accepts scientific notation."
         )
         parser.add_argument(
             "--save_every_x_steps",
             type=int,
             required=False,
-            default=1500,
+            default=1250,
             help="Saves a checkpoint every x steps"
         )
         parser.add_argument(
@@ -144,7 +144,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             required=False
         )
         parser.add_argument(
-            "--sampler",
+            "--resampler",
             type=str,
             choices=["linear", "bilinear", "bicubic", "lanczos"],
             default="lanczos",
@@ -187,7 +187,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             model_repo_id='',
             model_path=opt.training_model,
             batch_size=opt.batch_size,
-            num_workersopt.num_workers,
+            num_workers=opt.num_workers,
             repeats=opt.repeats,
             val_repeats=opt.val_repeats,
             resolution=opt.resolution,
@@ -298,7 +298,7 @@ def split_parse():
         required=False
     )
     parser.add_argument(
-        "--sampler",
+        "--resampler",
         type=str,
         choices=["linear", "bilinear", "bicubic", "lanczos"],
         default="lanczos",
