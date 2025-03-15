@@ -30,11 +30,11 @@ class JoePennaDreamboothConfigSchemaV1:
         self.training_images_folder_path: str = ''
         self.training_images_count: int = 0
         self.training_images: list[str] = []
-        self.regularization_images_folder_path: str = None
+        self.regularization_images_folder_path: str = ''
 
         # Token and Class
         self.token: str = ''
-        self.token_only: bool = False
+        self.token_only: bool = ''
         self.class_word: str = ''
 
         # Training Params
@@ -159,7 +159,8 @@ class JoePennaDreamboothConfigSchemaV1:
         self.repeats = repeats
         self.val_repeats = val_repeats
         self.resolution = resolution
-        self.sampler = sampler
+        self.resampler = resampler
+        self.train_val = train_val
 
         self.validate_gpu_vram()
 
@@ -217,7 +218,8 @@ class JoePennaDreamboothConfigSchemaV1:
                     repeats=config_parsed['repeats'],
                     val_repeats=config_parsed['val_repeats'],
                     resolution=config_parsed['resolution'],
-                    sampler=config_parsed['sampler'],
+                    resampler=config_parsed['resampler'],
+                    train_val[config_parsed['train_val']
                 )
             else:
                 print(f"Unrecognized schema: {config_parsed['schema']}", file=sys.stderr)
