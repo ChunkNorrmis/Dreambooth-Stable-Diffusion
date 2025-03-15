@@ -186,6 +186,13 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             learning_rate=opt.learning_rate,
             model_repo_id='',
             model_path=opt.training_model,
+            batch_size=opt.batch_size,
+            num_workersopt.num_workers,
+            repeats=opt.repeats,
+            val_repeats=opt.val_repeats,
+            resolution=opt.resolution,
+            resampler=opt.resampler,
+            train_val=opt.train_val
         )
 
     return config
