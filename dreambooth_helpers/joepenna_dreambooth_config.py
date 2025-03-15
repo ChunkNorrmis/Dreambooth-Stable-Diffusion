@@ -44,6 +44,7 @@ class JoePennaDreamboothConfigSchemaV1:
         # Model Info
         self.model_repo_id: str = ''
         self.model_path: str = ''
+        self.train_val = train_val
 
         self.batch_size: int = ''
         self.num_workers: int = ''
@@ -71,6 +72,7 @@ class JoePennaDreamboothConfigSchemaV1:
             val_repeats: int,
             resolution: int,
             resampler: str,
+            train_val: str,
             config_date_time: str = None,
             seed: int = 1337,
             debug: bool = False,
