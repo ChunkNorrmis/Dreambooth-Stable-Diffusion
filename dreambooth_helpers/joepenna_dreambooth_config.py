@@ -38,20 +38,20 @@ class JoePennaDreamboothConfigSchemaV1:
         self.class_word: str = ''
 
         # Training Params
-        self.flip_percent: float = arg.flip_p
-        self.learning_rate: float = arg.learning_rate
+        self.flip_percent: float = ''
+        self.learning_rate: float = ''
 
         # Model Info
         self.model_repo_id: str = ''
         self.model_path: str = ''
 
-        self.batch_size: int = arg.batch_size
-        self.num_workers: int = arg.num_workers
-        self.repeats: int = arg.repeats
-        self.val_repeats: int = arg.val_repeats
+        self.batch_size: int = ''
+        self.num_workers: int = ''
+        self.repeats: int = ''
+        self.val_repeats: int = ''
 
-        self.resolution: int = None
-        self.sampler: str = 'lanczos'
+        self.resolution: int = ''
+        self.sampler: str = ''
 
     def saturate(
             self,
