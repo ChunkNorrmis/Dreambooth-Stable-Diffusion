@@ -65,19 +65,19 @@ class JoePennaDreamboothConfigSchemaV1:
             flip_percent: float,
             learning_rate: float,
             model_path: str,
+            batch_size: int,
+            num_workers: int,
+            repeats: int,
+            val_repeats: int,
+            resolution: int,
+            resampler: str
             config_date_time: str = None,
             seed: int = 1337,
             debug: bool = False,
             gpu: int = 0,
             model_repo_id: str = '',
             token_only: bool = False,
-            run_seed_everything: bool = True,
-            batch_size: int = 1,
-            num_workers: int = 0,
-            repeats: int = 100,
-            val_repeats: int = 10,
-            resolution: int = None,
-            resampler: str = 'lanczos'
+            run_seed_everything: bool = True
     ):
 
         # Map the values
