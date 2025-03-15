@@ -44,7 +44,6 @@ class JoePennaDreamboothConfigSchemaV1:
         # Model Info
         self.model_repo_id: str = ''
         self.model_path: str = ''
-        self.train_val = train_val
 
         self.batch_size: int = ''
         self.num_workers: int = ''
@@ -72,7 +71,6 @@ class JoePennaDreamboothConfigSchemaV1:
             val_repeats: int,
             resolution: int,
             resampler: str,
-            train_val: str,
             config_date_time: str = None,
             seed: int = 1337,
             debug: bool = False,
@@ -162,7 +160,6 @@ class JoePennaDreamboothConfigSchemaV1:
         self.val_repeats = val_repeats
         self.resolution = resolution
         self.resampler = resampler
-        self.train_val = train_val
 
         self.validate_gpu_vram()
 
@@ -221,8 +218,7 @@ class JoePennaDreamboothConfigSchemaV1:
                     val_repeats=config_parsed['val_repeats'],
                     resolution=config_parsed['resolution'],
                     resampler=config_parsed['resampler'],
-                    train_val=config_parsed['train_val'],
-                               )
+                )
             else:
                 print(f"Unrecognized schema: {config_parsed['schema']}", file=sys.stderr)
 
