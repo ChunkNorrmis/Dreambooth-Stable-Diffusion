@@ -51,7 +51,7 @@ class JoePennaDreamboothConfigSchemaV1:
         self.val_repeats: int = ''
 
         self.resolution: int = ''
-        self.sampler: str = ''
+        self.resampler: str = ''
 
     def saturate(
             self,
@@ -72,12 +72,12 @@ class JoePennaDreamboothConfigSchemaV1:
             model_repo_id: str = '',
             token_only: bool = False,
             run_seed_everything: bool = True,
-            batch_size: int = 2,
+            batch_size: int = 1,
             num_workers: int = 0,
             repeats: int = 100,
             val_repeats: int = 10,
             resolution: int = None,
-            sampler: str = 'lanczos'
+            resampler: str = 'lanczos'
     ):
 
         # Map the values
