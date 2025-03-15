@@ -189,31 +189,12 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
 
 def split_parse():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--config_file_path",
-        type=str,
-        required=False,
-        default=None,
-        help="A config file containing all of your variables"
-    )
-    parser.add_argument(
-        "--project_name",
-        type=str,
-        required=True,
-        help="Name of the project"
-    )
+    
     parser.add_argument(
         "--seed",
         type=int,
         default=1337,
         help="seed for seed_everything",
-    )
-    parser.add_argument(
-        "--max_training_steps",
-        type=int,
-        default=5000,
-        required=False,
-        help="Number of training steps to run"
     )
     parser.add_argument(
         "--token",
