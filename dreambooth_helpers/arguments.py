@@ -150,15 +150,6 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             default="lanczos",
             required=False
         )
-        parser.add_argument(
-            "--train_val",
-            type=str,
-            const="validation",
-            nargs="?",
-            default=None,
-            required=False
-        )
-
 
         return parser
 
@@ -191,8 +182,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             repeats=opt.repeats,
             val_repeats=opt.val_repeats,
             resolution=opt.resolution,
-            resampler=opt.resampler,
-            train_val=opt.train_val
+            resampler=opt.resampler
         )
 
     return config
