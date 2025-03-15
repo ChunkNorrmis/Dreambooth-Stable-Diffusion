@@ -219,7 +219,7 @@ class JoePennaDreamboothConfigSchemaV1:
                     val_repeats=config_parsed['val_repeats'],
                     resolution=config_parsed['resolution'],
                     resampler=config_parsed['resampler'],
-                    train_val[config_parsed['train_val']
+                    train_val=[config_parsed['train_val']
                 )
             else:
                 print(f"Unrecognized schema: {config_parsed['schema']}", file=sys.stderr)
