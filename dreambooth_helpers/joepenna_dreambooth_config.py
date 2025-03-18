@@ -227,7 +227,7 @@ class JoePennaDreamboothConfigSchemaV1:
 
     def create_checkpoint_file_name(self, steps: str):
         date_string = datetime.now(timezone.utc).strftime("%m-%dT%H-%M")
-        return f"{date_string}_{self.project_name}_{int(steps):05d}_steps.ckpt".replace(" ", "_")
+        return f"{self.project_name}_{int(steps):05d}_steps.ckpt".replace(" ", "_")
 
     def save_config_to_file(
             self,
@@ -248,7 +248,7 @@ class JoePennaDreamboothConfigSchemaV1:
             print(f"✅ {self.project_config_filename} successfully generated.  Proceed to training.")
 
     def get_training_folder_name(self) -> str:
-        return f"{self.config_date_time}_{self.project_name}"
+        return f"{self.project_name}"
 
     def log_directory(self) -> str:
         return os.path.join("logs", self.get_training_folder_name())
