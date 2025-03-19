@@ -1,3 +1,4 @@
+import cv2
 import os
 import numpy as np
 import PIL
@@ -52,6 +53,8 @@ class LSUNBase(Dataset):
         img = img[(h - crop) // 2:(h + crop) // 2,
               (w - crop) // 2:(w + crop) // 2]
 
+        image = self.flip(image)
+        
         image = Image.fromarray(img)
         if self.size is not None and image.size > (self.size, self.size):
             image = image.resize(
@@ -59,9 +62,10 @@ class LSUNBase(Dataset):
                 resample=self.interpolation,
                 reducing_gap=3
             )
-
-        image = self.flip(image)
-        image = np.array(image).astype(np.uint8)
+            image = cv2.imread(np.array(image).astype(np.uint8))
+            strength = np.array([[0, -1, 0], [0, 2, 0], [0, 0, 0]])
+            image = cv2.filter2D(image, -1, strength)
+            
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
 
