@@ -128,13 +128,16 @@ class PersonalizedBase(Dataset):
         image = Image.fromarray(img)
         image = self.flip(image)
         
-        if self.size is not None and image.size > (self.size, self.size):
-            image = image.resize((self.size, self.size), resample=self.interpolation, reducing_gap=3).
-            im = cv2.imread(np.array(image).astype(np.uint8))
-            strength = np.array[[0, -1, 0], [0, 2, 0], [0, 0, 0]]
-            image = cv2.filter2D(im, -1, strength)
-        
-        
-        example["image"] = (image / 127.5 - 1.0).astype(np.float32)
+        if self.size is not None and (image.width, image.height) > (self.size, self.size):
+            image = image.resize(
+                (self.size, self.size),
+                resample=self.interpolation,
+                reducing_gap=3
+            )
+            im = cv2.imread(np.array(image))
+            sharpness = np.array[[0, -1, 0], [0, 2, 0], [0, 0, 0]]
+            image = cv2.filter2D(im, -1, sharpness)
+
+        example["image"] = (np.array(image) / 127.5 - 1.0).astype(np.float32)
         return example
 
