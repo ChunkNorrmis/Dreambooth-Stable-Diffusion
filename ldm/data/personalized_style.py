@@ -134,10 +134,8 @@ class PersonalizedBase(Dataset):
                 resample=self.interpolation,
                 reducing_gap=3
             )
-            
-            im = np.array(image).astype(np.uint8)
-            kernel = np.array([[0, -1, 0], [0, 2, 0], [0, 0, 0]])
-            image = cv2.filter2D(im, -1, kernel)
+            image = np.array(image).astype(np.uint8)
+            image = cv2.filter2D(image, -1, kernel=np.array([[0, -1, 0], [0, 2, 0], [0, 0, 0]]))
 
         example["image"] = (np.array(image) / 127.5 - 1.0).astype(np.float32)
         return example
