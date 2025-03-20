@@ -48,23 +48,22 @@ class LSUNBase(Dataset):
 
         # default to score-sde preprocessing
         img = np.array(image).astype(np.uint8)
-        crop = min(img.shape[0], img.shape[1])
-        h, w, = img.shape[0], img.shape[1]
-        img = img[(h - crop) // 2:(h + crop) // 2,
-              (w - crop) // 2:(w + crop) // 2]
 
+        if self.center_crop:
+            crop = min(img.shape[0], img.shape[1])
+            h, w, = img.shape[0], img.shape[1]
+            img = img[(h - crop) // 2:(h + crop) // 2,
+                      (w - crop) // 2:(w + crop) // 2]
+
+        image = Image.fromarray(img)
         image = self.flip(image)
         
-        image = Image.fromarray(img)
         if self.size is not None and image.size > (self.size, self.size):
-            image = image.resize(
-                size=(self.size, self.size),
-                resample=self.interpolation,
-                reducing_gap=3
-            )
-            image = cv2.imread(np.array(image).astype(np.uint8))
-            strength = np.array([[0, -1, 0], [0, 2, 0], [0, 0, 0]])
-            image = cv2.filter2D(image, -1, strength)
+            image = image.resize((self.size, self.size), resample=self.interpolation, reducing_gap=3).
+            im = cv2.imread(np.array(image).astype(np.uint8))
+            strength = np.array[[0, -1, 0], [0, 2, 0], [0, 0, 0]]
+            image = cv2.filter2D(im, -1, strength)
+        
             
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
