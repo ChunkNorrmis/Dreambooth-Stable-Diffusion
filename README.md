@@ -129,7 +129,7 @@ From within the My Pods page,
 1. Open `bash` or your preferred shell terminal
 2. download git and python3.10 through your distros package repository e.g.
 ```bash
-$ apt install -y git python3.10-full
+$ apt install -y git python3.10-full libgl-dev
 ```
 4. Clone the git repository
 ```bash
