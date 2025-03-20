@@ -64,9 +64,10 @@ class LSUNBase(Dataset):
                 resample=self.interpolation,
                 reducing_gap=3
             )
-            im = cv2.imread(np.array(image))
-            sharpness = np.array[[0, -1, 0], [0, 2, 0], [0, 0, 0]]
-            image = cv2.filter2D(im, -1, sharpness)
+            
+            im = np.array(image).astype(np.uint8)
+            kernel = np.array([[0, -1, 0], [0, 2, 0], [0, 0, 0]])
+            image = cv2.filter2D(im, -1, kernel)
 
         example["image"] = (np.array(image) / 127.5 - 1.0).astype(np.float32)
         return example
