@@ -107,7 +107,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             "--save_every_x_steps",
             type=int,
             required=False,
-            default=650,
+            default=None,
             help="Saves a checkpoint every x steps"
         )
         parser.add_argument(
