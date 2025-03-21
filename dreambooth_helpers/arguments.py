@@ -33,18 +33,21 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--debug",
             action="store_true",
+            required=False,
             help="Enable debug logging",
         )
         parser.add_argument(
             "--seed",
             type=int,
             default=1337,
+            required=False,
             help="seed for seed_everything",
         )
         parser.add_argument(
             "--max_training_steps",
             type=int,
             required=False,
+            default=3000,
             help="Number of training steps to run"
         )
         parser.add_argument(
@@ -56,6 +59,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--token_only",
             action="store_true",
+            required=False,
             help="Train only using the token and no class."
         )
         parser.add_argument(
@@ -63,6 +67,12 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             type=str,
             required=True,
             help="Path to model to train (model.ckpt)"
+        )
+        parser.add_argument(
+            "--class_word",
+            type=str,
+            required=False,
+            help="Match class_word to the category of images you want to train. Example: 'man', 'woman', 'dog', or 'artstyle'."
         )
         parser.add_argument(
             "--training_images",
@@ -75,12 +85,6 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             type=str,
             required=True,
             help="Path to directory with regularization images"
-        )
-        parser.add_argument(
-            "--class_word",
-            type=str,
-            required=False,
-            help="Match class_word to the category of images you want to train. Example: 'man', 'woman', 'dog', or 'artstyle'."
         )
         parser.add_argument(
             "--flip_p",
@@ -96,14 +100,14 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             "--learning_rate",
             type=float,
             required=False,
-            default=8.0e-07,
+            default=5.0e-07,
             help="Set the learning rate. Defaults to 1.0e-06 (0.000001).  Accepts scientific notation."
         )
         parser.add_argument(
             "--save_every_x_steps",
             type=int,
             required=False,
-            default=1250,
+            default=650,
             help="Saves a checkpoint every x steps"
         )
         parser.add_argument(
@@ -116,13 +120,13 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--batch_size",
             type=int,
-            default=2,
+            default=1,
             required=False
         )
         parser.add_argument(
             "--num_workers",
             type=int,
-            default=1,
+            default=0,
             required=False
         )
         parser.add_argument(
@@ -147,7 +151,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             "--resampler",
             type=str,
             choices=["linear", "bilinear", "bicubic", "lanczos"],
-            default="lanczos",
+            default="bicubic",
             required=False
         )
 
@@ -199,12 +203,12 @@ def split_parse():
     parser.add_argument(
         "--token",
         type=str,
-        required=False,
         help="Unique token you want to represent your trained model. Ex: firstNameLastName."
     )
     parser.add_argument(
         "--token_only",
         action="store_true",
+        required=False,
         help="Train only using the token and no class."
     )
     parser.add_argument(
@@ -222,7 +226,7 @@ def split_parse():
     parser.add_argument(
         "--regularization_images",
         type=str,
-        required=True,
+        required=False,
         help="Path to directory with regularization images"
     )
     parser.add_argument(
@@ -240,13 +244,13 @@ def split_parse():
     parser.add_argument(
         "--batch_size",
         type=int,
-        default=2,
+        default=1,
         required=False
     )
     parser.add_argument(
         "--num_workers",
         type=int,
-        default=1,
+        default=0,
         required=False
     )
     parser.add_argument(
@@ -263,8 +267,7 @@ def split_parse():
     )
     parser.add_argument(
         "--resize",
-        const=512,
-        nargs="?",
+        type=int,
         default=None,
         required=False
     )
@@ -272,7 +275,7 @@ def split_parse():
         "--resampler",
         type=str,
         choices=["linear", "bilinear", "bicubic", "lanczos"],
-        default="lanczos",
+        default="bicubic",
         required=False
     )
     parser.add_argument(
