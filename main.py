@@ -10,7 +10,7 @@ from pytorch_lightning.trainer import Trainer
 from torch.utils.data import random_split, DataLoader
 
 import dreambooth_helpers.dreambooth_trainer_configurations as db_cfg
-from dreambooth_helpers.arguments import parse_arguments, split_parse
+from dreambooth_helpers.arguments import parse_arguments
 from dreambooth_helpers.dataset_helpers import WrappedDataset, ConcatDataset
 from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
 from dreambooth_helpers.copy_and_name_checkpoints import copy_and_name_checkpoints
