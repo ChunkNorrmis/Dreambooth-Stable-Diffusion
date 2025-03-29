@@ -18,10 +18,6 @@ from ldm.data.base import Txt2ImgIterableBaseDataset
 from ldm.util import instantiate_from_config, load_model_from_config
 
 
-parser = split_parse()
-arg, ukwn = parser.parse_known_args()
-
-
 def worker_init_fn(_):
     worker_info = torch.utils.data.get_worker_info()
 
