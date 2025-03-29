@@ -10,12 +10,16 @@ from pytorch_lightning.trainer import Trainer
 from torch.utils.data import random_split, DataLoader
 
 import dreambooth_helpers.dreambooth_trainer_configurations as db_cfg
-from dreambooth_helpers.arguments import parse_arguments
+from dreambooth_helpers.arguments import parse_arguments, split_parse
 from dreambooth_helpers.dataset_helpers import WrappedDataset, ConcatDataset
 from dreambooth_helpers.joepenna_dreambooth_config import JoePennaDreamboothConfigSchemaV1
 from dreambooth_helpers.copy_and_name_checkpoints import copy_and_name_checkpoints
 from ldm.data.base import Txt2ImgIterableBaseDataset
 from ldm.util import instantiate_from_config, load_model_from_config
+
+
+parser = split_parse()
+arg, ukwn = parser.parse_known_args()
 
 
 def worker_init_fn(_):
@@ -38,13 +42,13 @@ class DataModuleFromConfig(pl.LightningDataModule):
     def __init__(
             self,
             batch_size,
-            train=None,
-            reg=None,
+            num_workers,
+            train,
+            reg,
             validation=None,
             test=None,
             predict=None,
             wrap=False,
-            num_workers=None,
             shuffle_test_loader=False,
             use_worker_init_fn=False,
             shuffle_val_dataloader=False
