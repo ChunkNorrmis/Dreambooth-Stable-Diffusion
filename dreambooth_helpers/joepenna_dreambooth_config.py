@@ -18,32 +18,41 @@ class JoePennaDreamboothConfigSchemaV1:
 
         # Project
         self.project_name: str = ''
-        self.seed: int = 23
+        self.seed: int = 1337
         self.debug: bool = False
         self.gpu: int = 0
 
         # Training Steps
-        self.max_training_steps: int = 2000
-        self.save_every_x_steps: int = 0
+        self.max_training_steps: int = 5000
+        self.save_every_x_steps: int = 1500
 
         # Training & Regularization Images
         self.training_images_folder_path: str = ''
         self.training_images_count: int = 0
         self.training_images: list[str] = []
-        self.regularization_images_folder_path: str = None
+        self.regularization_images_folder_path: str = ''
 
         # Token and Class
         self.token: str = ''
-        self.token_only: bool = False
+        self.token_only: bool = ''
         self.class_word: str = ''
 
         # Training Params
-        self.flip_percent: float = 0.5
-        self.learning_rate: float = 1.0e-06
+        self.flip_percent: float = ''
+        self.learning_rate: float = ''
 
         # Model Info
         self.model_repo_id: str = ''
         self.model_path: str = ''
+
+        self.batch_size: int = ''
+        self.num_workers: int = ''
+        self.resolution: int = ''
+        self.resampler: str = ''
+
+        self.repeats: int = ''
+        self.val_repeats: int = ''
+        self.train_val: str = ''
 
     def saturate(
             self,
@@ -57,13 +66,20 @@ class JoePennaDreamboothConfigSchemaV1:
             flip_percent: float,
             learning_rate: float,
             model_path: str,
+            batch_size: int,
+            num_workers: int,
+            repeats: int,
+            val_repeats: int,
+            resolution: int,
+            resampler: str,
+            train_val: str,
             config_date_time: str = None,
-            seed: int = 23,
+            seed: int = 1337,
             debug: bool = False,
             gpu: int = 0,
             model_repo_id: str = '',
             token_only: bool = False,
-            run_seed_everything: bool = True,
+            run_seed_everything: bool = True
     ):
 
         # Map the values
@@ -140,6 +156,14 @@ class JoePennaDreamboothConfigSchemaV1:
         if not os.path.exists(self.model_path):
             raise Exception(f"Model Path Not Found: '{self.model_path}'.")
 
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+        self.repeats = repeats
+        self.val_repeats = val_repeats
+        self.resolution = resolution
+        self.resampler = resampler
+        self.train_val = train_val
+
         self.validate_gpu_vram()
 
         self._create_log_folders()
@@ -191,6 +215,13 @@ class JoePennaDreamboothConfigSchemaV1:
                     gpu=config_parsed['gpu'],
                     model_repo_id=config_parsed['model_repo_id'],
                     token_only=config_parsed['token_only'],
+                    batch_size=config_parsed['batch_size'],
+                    num_workers=config_parsed['num_workers'],
+                    repeats=config_parsed['repeats'],
+                    val_repeats=config_parsed['val_repeats'],
+                    resolution=config_parsed['resolution'],
+                    train_val=config_parsed['train_val'],
+                    resampler=config_parsed['resampler']
                 )
             else:
                 print(f"Unrecognized schema: {config_parsed['schema']}", file=sys.stderr)
@@ -199,12 +230,8 @@ class JoePennaDreamboothConfigSchemaV1:
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
     def create_checkpoint_file_name(self, steps: str):
-        date_string = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S")
-        return f"{date_string}_{self.project_name}_" \
-               f"{int(steps):05d}_steps_" \
-               f"{self.training_images_count}_training_images_" \
-               f"{self.token}_token_" \
-               f"{self.class_word}_class_word.ckpt".replace(" ", "_")
+        date_string = datetime.now(timezone.utc).strftime("%m-%dT%H-%M")
+        return f"{date_string}_{self.project_name}_{int(steps):05d}_steps.ckpt".replace(" ", "_")
 
     def save_config_to_file(
             self,
@@ -225,7 +252,7 @@ class JoePennaDreamboothConfigSchemaV1:
             print(f"✅ {self.project_config_filename} successfully generated.  Proceed to training.")
 
     def get_training_folder_name(self) -> str:
-        return f"{self.config_date_time}_{self.project_name}"
+        return f"{self.project_name}"
 
     def log_directory(self) -> str:
         return os.path.join("logs", self.get_training_folder_name())
