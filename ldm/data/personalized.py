@@ -24,8 +24,8 @@ class PersonalizedBase(Dataset):
         coarse_class_text,
         interpolation,
         token_only=None,
-        reg=None,
-        flip_p=None,
+        reg=False,
+        flip_p=0.0,
         per_image_tokens=False,
         center_crop=False,
         mixing_prob=0.25
