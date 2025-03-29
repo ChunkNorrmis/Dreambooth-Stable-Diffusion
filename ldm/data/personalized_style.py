@@ -60,9 +60,9 @@ class PersonalizedBase(Dataset):
         size,
         repeats,
         interpolation,
-        flip_p,
         set,
         placeholder_token,
+        flip_p=0.0,
         per_image_tokens=False,
         center_crop=False
     ):
