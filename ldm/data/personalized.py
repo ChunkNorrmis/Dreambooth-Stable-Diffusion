@@ -2,48 +2,46 @@ import os
 from typing import OrderedDict
 import numpy as np
 import PIL
-from PIL import Image
+from PIL import Image, ImageEnhance
 from torch.utils.data import Dataset
 from torchvision import transforms
-from captionizer import caption_from_path, generic_captions_from_path
-from captionizer import find_images
+from captionizer import caption_from_path, generic_captions_from_path, find_images
 
 per_img_token_list = [
     'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט', 'י', 'כ', 'ל', 'מ', 'נ', 'ס', 'ע', 'פ', 'צ', 'ק', 'ר', 'ש', 'ת',
 ]
 
 class PersonalizedBase(Dataset):
-    def __init__(self,
-                 data_root,
-                 size=None,
-                 repeats=100,
-                 interpolation="bicubic",
-                 flip_p=0.5,
-                 set="train",
-                 placeholder_token="dog",
-                 per_image_tokens=False,
-                 center_crop=False,
-                 mixing_prob=0.25,
-                 coarse_class_text=None,
-                 token_only=False,
-                 reg=False
-                 ):
-
+    def __init__(
+        self,
+        data_root,
+        size,
+        repeats,
+        set,
+        placeholder_token,
+        coarse_class_text,
+        interpolation,
+        reg,
+        flip_p,
+        token_only=False,
+        per_image_tokens=False,
+        center_crop=False,
+        mixing_prob=0.25
+    ):
+        super(PersonalizedBase).__init__()
+        
         self.data_root = data_root
-
         self.image_paths = find_images(self.data_root)
-
-        # self._length = len(self.image_paths)
         self.num_images = len(self.image_paths)
         self._length = self.num_images
-
         self.placeholder_token = placeholder_token
         self.token_only = token_only
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
         self.mixing_prob = mixing_prob
-
         self.coarse_class_text = coarse_class_text
+        self.size = size
+        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
 
         if per_image_tokens:
             assert self.num_images < len(
@@ -52,13 +50,12 @@ class PersonalizedBase(Dataset):
         if set == "train":
             self._length = self.num_images * repeats
 
-        self.size = size
-        self.interpolation = {"linear": PIL.Image.LINEAR,
-                              "bilinear": PIL.Image.BILINEAR,
-                              "bicubic": PIL.Image.BICUBIC,
-                              "lanczos": PIL.Image.LANCZOS,
-                              }[interpolation]
-        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
+        self.interpolation = {
+            "bilinear": PIL.Image.BILINEAR,
+            "bicubic": PIL.Image.BICUBIC,
+            "lanczos": PIL.Image.LANCZOS,
+            }[interpolation]
+
         self.reg = reg
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
@@ -80,7 +77,6 @@ class PersonalizedBase(Dataset):
         else:
             example["caption"] = caption_from_path(image_path, self.data_root, self.coarse_class_text, self.placeholder_token)
 
-        # default to score-sde preprocessing
         img = np.array(image).astype(np.uint8)
 
         if self.center_crop:
@@ -90,11 +86,12 @@ class PersonalizedBase(Dataset):
                       (w - crop) // 2:(w + crop) // 2]
 
         image = Image.fromarray(img)
-        if self.size is not None:
-            image = image.resize((self.size, self.size),
-                                 resample=self.interpolation)
-
         image = self.flip(image)
+
+        if not (self.size, self.size) == image.size:
+            image = image.resize((self.size, self.size), resample=self.interpolation, reducing_gap=3)
+            image = ImageEnhance.Sharpness(image).enhance(1.2)
+
         image = np.array(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
