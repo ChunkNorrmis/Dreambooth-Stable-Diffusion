@@ -174,6 +174,8 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "data_root": config.regularization_images_folder_path,
             "coarse_class_text": config.class_word,
             "placeholder_token": config.token,
+            "token_only": config.token_only,
+            "flip_p": config.flip_percent,
             "interpolation": config.resampler
         }
     }
@@ -210,6 +212,8 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "coarse_class_text": config.class_word,
                     "placeholder_token": config.token,
                     "data_root": config.training_images_folder_path,
+                    "token_only": config.token_only,
+                    "flip_p": config.flip_percent,
                     "interpolation": config.resampler
                 }
             }
