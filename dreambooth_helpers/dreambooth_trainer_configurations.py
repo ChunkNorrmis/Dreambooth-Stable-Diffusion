@@ -166,17 +166,17 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
     reg_block = {
         "target": "ldm.data.personalized.PersonalizedBase",
         "params": {
-            "size": config.resolution,
             "set": "train",
             "reg": True,
-            "per_image_tokens": False,
-            "repeats": config.val_repeats,
             "data_root": config.regularization_images_folder_path,
+            "size": config.resolution,
+            "repeats": config.val_repeats,
+            "placeholder_token": None,
             "coarse_class_text": config.class_word,
-            "placeholder_token": config.token,
-            "token_only": config.token_only,
             "flip_p": config.flip_percent,
-            "interpolation": config.resampler
+            "interpolation": config.resampler,
+            "token_only": False,
+            "per_image_tokens": False
         }
     }
 
@@ -189,32 +189,32 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "train": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
-                    "size": config.resolution,
                     "set": "train",
-                    "per_image_tokens": False,
-                    "repeats": config.repeats,
-                    "coarse_class_text": config.class_word,
                     "data_root": config.training_images_folder_path,
+                    "size": config.resolution,
+                    "repeats": config.repeats,
                     "placeholder_token": config.token,
-                    "token_only": config.token_only,
+                    "coarse_class_text": config.class_word,
                     "flip_p": config.flip_percent,
-                    "interpolation": config.resampler
+                    "interpolation": config.resampler,
+                    "token_only": config.token_only,
+                    "per_image_tokens": False
                 }
             },
             "reg": reg_block if config.token_only is False else True,
             "validation": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
-                    "size": config.resolution,
                     "set": "validation",
-                    "per_image_tokens": False,
-                    "repeats": config.val_repeats,
-                    "coarse_class_text": config.class_word,
-                    "placeholder_token": config.token,
                     "data_root": config.training_images_folder_path,
-                    "token_only": config.token_only,
+                    "size": config.resolution,
+                    "repeats": config.val_repeats,
+                    "placeholder_token": config.token,
+                    "coarse_class_text": config.class_word,
                     "flip_p": config.flip_percent,
-                    "interpolation": config.resampler
+                    "interpolation": config.resampler,
+                    "token_only": config.token_only,
+                    "per_image_tokens": False
                 }
             }
         }
