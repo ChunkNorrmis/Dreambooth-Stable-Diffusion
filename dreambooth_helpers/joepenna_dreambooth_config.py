@@ -18,7 +18,6 @@ class JoePennaDreamboothConfigSchemaV1:
         project_name:str,
         max_training_steps:int,
         save_every_x_steps:int,
-        token_only:bool,
         training_images_folder_path:str,
         regularization_images_folder_path:str,
         token:str,
@@ -35,6 +34,7 @@ class JoePennaDreamboothConfigSchemaV1:
         seed:int,
         debug:bool,
         gpu:int,
+        token_only:bool=False,
         model_repo_id:str=None
     ):
         self.schema = 1
