@@ -204,7 +204,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
                     "size": config.resolution,
-                    "set": "val",
+                    "set": "validation",
                     "per_image_tokens": False,
                     "repeats": config.val_repeats,
                     "coarse_class_text": config.class_word,
