@@ -38,13 +38,13 @@ class DataModuleFromConfig(pl.LightningDataModule):
     def __init__(
             self,
             batch_size,
-            train=None,
-            reg=None,
-            validation=None,
+            num_workers,
+            train,
+            reg,
+            validation,
             test=None,
             predict=None,
             wrap=False,
-            num_workers=None,
             shuffle_test_loader=False,
             use_worker_init_fn=False,
             shuffle_val_dataloader=False
