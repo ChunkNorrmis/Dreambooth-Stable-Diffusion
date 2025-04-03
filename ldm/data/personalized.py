@@ -23,7 +23,7 @@ class PersonalizedBase(Dataset):
         interpolation,
         reg,
         flip_p,
-        token_only=False,
+        token_only,
         per_image_tokens=False,
         center_crop=False,
         mixing_prob=0.25
@@ -53,8 +53,8 @@ class PersonalizedBase(Dataset):
         self.interpolation = {
             "bilinear": PIL.Image.BILINEAR,
             "bicubic": PIL.Image.BICUBIC,
-            "lanczos": PIL.Image.LANCZOS,
-            }[interpolation]
+            "lanczos": PIL.Image.LANCZOS
+        }[interpolation]
 
         self.reg = reg
         if self.reg and self.coarse_class_text:
@@ -93,5 +93,6 @@ class PersonalizedBase(Dataset):
             image = ImageEnhance.Sharpness(image).enhance(1.2)
 
         image = np.array(image).astype(np.uint8)
+        
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
