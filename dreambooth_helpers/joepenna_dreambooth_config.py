@@ -11,7 +11,7 @@ from pytorch_lightning import seed_everything
 
 class JoePennaDreamboothConfigSchemaV1:
     def __init__(self):
-        super(JoePennaDreamboothConfigSchemaV1).__init__()
+        super().__init__()
 
     def saturate(
         self,
@@ -35,8 +35,7 @@ class JoePennaDreamboothConfigSchemaV1:
         seed:int,
         debug:bool,
         gpu:int,
-        model_repo_id:str=None,
-        run_seed_everything:bool=True
+        model_repo_id:str=None
     ):
         self.schema = 1
         self.project_name = project_name
@@ -45,7 +44,7 @@ class JoePennaDreamboothConfigSchemaV1:
         self.debug = debug
         self.gpu = gpu
         self.seed = seed
-        self.run_seed_everything = run_seed_everything
+        seed_everything(self.seed)
         self.save_every_x_steps = save_every_x_steps
 
         if os.path.exists(training_images_folder_path):
@@ -176,6 +175,9 @@ class JoePennaDreamboothConfigSchemaV1:
             shutil.copy(config_save_path, os.path.join(save_path, "active-config.json"))
             print(project_config_json)
             print(f"✅ {self.project_config_filename} successfully generated.  Proceed to training.")
+
+     def get_training_folder_name(self) -> str:
+        return f"{self.config_date_time}_{self.project_name}"
 
     def log_directory(self) -> str:
         return os.path.join("logs", f"{self.config_date_time}_{self.project_name}")
