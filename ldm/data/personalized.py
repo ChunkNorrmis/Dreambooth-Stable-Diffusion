@@ -18,14 +18,14 @@ class PersonalizedBase(Dataset):
         size,
         repeats,
         set,
-        reg,
         placeholder_token,
         coarse_class_text,
         flip_p,
         interpolation,
-        token_only=False,
-        per_image_tokens=False,
-        center_crop=False,
+        token_only,
+        per_image_tokens,
+        center_crop,
+        reg=None,
         mixing_prob=0.25
     ):
         super(PersonalizedBase).__init__()
