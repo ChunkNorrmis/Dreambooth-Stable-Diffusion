@@ -34,7 +34,9 @@ class JoePennaDreamboothConfigSchemaV1:
         seed:int,
         debug:bool,
         gpu:int,
-        token_only:bool=False,
+        token_only:bool,
+        center_crop:bool,
+        mix_probability:float,
         model_repo_id:str=None
     ):
         self.schema = 1
@@ -71,7 +73,7 @@ class JoePennaDreamboothConfigSchemaV1:
         if self.token_only is False:
             self.class_word = class_word
             if regularization_images_folder_path is not None and os.path.exists(regularization_images_folder_path):
-                self.regularization_images_folder_path = regularization_images_folder_path
+                self.regularization_images_folder_path = os.path.relpath(regularization_images_folder_path)
             else:
                 raise Exception(f"Regularization Images Path Not Found: '{self.regularization_images_folder_path}'.")
 
@@ -101,6 +103,10 @@ class JoePennaDreamboothConfigSchemaV1:
         self.resolution = resolution
         self.resampler = resampler
 
+        
+        self.center_crop = center_crop
+        self.mix_probability = mix_probability
+        
         self.validate_gpu_vram()
         self._create_log_folders()
 
@@ -151,7 +157,9 @@ class JoePennaDreamboothConfigSchemaV1:
                     repeats=config_parsed['repeats'],
                     val_repeats=config_parsed['val_repeats'],
                     resolution=config_parsed['resolution'],
-                    resampler=config_parsed['resampler']
+                    resampler=config_parsed['resampler'],
+                    mix_probability=config_parsed['shuffle_rate'],
+                    center_crop=config_parsed['center_crop']
                 )
             else:
                 print(f"Unrecognized schema: {config_parsed['schema']}", file=sys.stderr)
