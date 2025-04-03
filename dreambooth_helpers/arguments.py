@@ -160,7 +160,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             "--center_crop",
             type=bool,
             required=False,
-            action="set_true"            
+            action="store_true"            
         )
         parser.add_argument(
             "--shuffle_rate",
