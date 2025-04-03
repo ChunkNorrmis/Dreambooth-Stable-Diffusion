@@ -199,7 +199,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "interpolation": config.resampler
                 }
             },
-            "reg": reg_block if config.token_only is False else None,
+            "reg": reg_block if config.token_only is False else True,
             "validation": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
