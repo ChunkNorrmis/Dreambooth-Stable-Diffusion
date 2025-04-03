@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import PIL
-from PIL import Image
+from PIL import Image, ImageEnhance
 from torch.utils.data import Dataset
 from torchvision import transforms
 
@@ -56,12 +56,12 @@ per_img_token_list = [
 class PersonalizedBase(Dataset):
     def __init__(self,
                  data_root,
-                 size=None,
-                 repeats=100,
-                 interpolation="bicubic",
-                 flip_p=0.5,
-                 set="train",
-                 placeholder_token="*",
+                 size,
+                 repeats,
+                 interpolation,
+                 flip_p,
+                 set,
+                 placeholder_token,
                  per_image_tokens=False,
                  center_crop=False,
                  ):
@@ -86,8 +86,7 @@ class PersonalizedBase(Dataset):
             self._length = self.num_images * repeats
 
         self.size = size
-        self.interpolation = {"linear": PIL.Image.LINEAR,
-                              "bilinear": PIL.Image.BILINEAR,
+        self.interpolation = {"bilinear": PIL.Image.BILINEAR,
                               "bicubic": PIL.Image.BICUBIC,
                               "lanczos": PIL.Image.LANCZOS,
                               }[interpolation]
@@ -109,8 +108,6 @@ class PersonalizedBase(Dataset):
             text = random.choice(imagenet_templates_small).format(self.placeholder_token)
             
         example["caption"] = text
-
-        # default to score-sde preprocessing
         img = np.array(image).astype(np.uint8)
         
         if self.center_crop:
@@ -120,10 +117,12 @@ class PersonalizedBase(Dataset):
                 (w - crop) // 2:(w + crop) // 2]
 
         image = Image.fromarray(img)
-        if self.size is not None:
-            image = image.resize((self.size, self.size), resample=self.interpolation)
+        
+        if not (self.size, self.size) == image.size:
+            image = image.resize((self.size, self.size), resample=self.interpolation, reducing_gap=3)
+            image = ImageEnhance.Sharpness(image).enhance(1.2)
 
-        image = self.flip(image)
         image = np.array(image).astype(np.uint8)
+        
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
