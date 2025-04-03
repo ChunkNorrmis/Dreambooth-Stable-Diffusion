@@ -1,3 +1,46 @@
+# <a name="running-locally"></a> Running Locally with python on linux 
+***Optionally you may use anaconda (conda) instead of standard python (if you have that kind of time...)***
+
+## <a name="quick-setup"></a> Quick Setup
+
+1. open `bash` or your preferred shell terminal of choice
+2. download python and git from your distros package repository
+```bash
+sudo apt install -y python3.10-full git
+```
+3. Clone the repository
+```bash
+mkdir -p ~/got
+git clone https://github.com/ChunkNorrmis/dreambooth-stable-diffusion ~/got/dreambooth-stable-diffusion
+cd ~/got/dreambooth-stable-diffusion
+```
+4. Create and activate a virtual environment for dreambooth to operate in
+```bash
+python3.10 -m venv dream-venv
+source ./dream-venv/bin/activate
+```
+5. Install Dependencies and Activate Environment
+```bash
+pip install -U pip==24.0 wheel
+pip install --no-cache-dir -r ./requirements.txt
+pip install huggingface_hub hf_transfer gdown 
+```
+6. Download a basemodel to train with
+```bash
+HF_HUB_ENABLE_HF_TRANSFER="1" huggingface_cli download 'sd-legacy/stable-diffusion-v1-5' 'v1-5-pruned-emaonly.ckpt' --local_dir .
+```
+7. add your training images to their corresponding folders in the specified directory hieracrchy (*explained in detail [below](captions-and-multi-concept)*)  
+
+8. Lauch dreambooth
+```bash
+python main.py --project_name "ProjectName" --training_model v1-5-pruned-emaonly.ckpt --regularization_images "C:\regularization_images" --training_images "C:\training_images" --max_training_steps 2000 --class_word "person" --token "zwx" --flip_p 0 --learning_rate 1.0e-06 --save_every_x_steps 250`
+```
+9. Cleanup
+```bash
+deactivate 
+```
+10. Profit??
+
 
 # Extended Dreambooth How-To Guides by Yushan
 [For Running On Vast.ai](https://medium.com/@yushantripleseven/dreambooth-training-joepenna-on-vast-ai-5f1018239820)<br>
@@ -120,35 +163,6 @@ From within the My Pods page,
 - Navigate into the new `Dreambooth-Stable-Diffusion` directory on the left and open either the `dreambooth_simple_joepenna.ipynb` or `dreambooth_runpod_joepenna.ipynb` file
   - ![img.png](readme-images/vast-ai-step6-open-notebook.png)
 - Follow the instructions in the workbook and start training
-
-## <a name="running-locally"></a> Running Locally Instructions
-
-### <a name="running-locally-venv"></a> Setup - Virtual Environment
-
-### Pre-Requisites
-1. [Git](https://gitforwindows.org/)
-2. [Python 3.10](https://www.python.org/downloads/)
-3. Open `cmd`
-4. Clone the repository
-   1. `C:\>git clone https://github.com/JoePenna/Dreambooth-Stable-Diffusion`
-5. Navigate into the repository
-   1. `C:\>cd Dreambooth-Stable-Diffusion`
-
-### Install Dependencies and Activate Environment
-```cmd
-cmd> python -m venv dreambooth_joepenna
-cmd> dreambooth_joepenna\Scripts\activate.bat
-cmd> pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 --extra-index-url https://download.pytorch.org/whl/cu117
-cmd> pip install -r requirements.txt
-```
-
-#### Run
-`cmd> python "main.py" --project_name "ProjectName" --training_model "C:\v1-5-pruned-emaonly-pruned.ckpt" --regularization_images "C:\regularization_images" --training_images "C:\training_images" --max_training_steps 2000 --class_word "person" --token "zwx" --flip_p 0 --learning_rate 1.0e-06 --save_every_x_steps 250`
-
-#### Cleanup
-```cmd
-cmd> deactivate 
-```
 
 ### <a name="running-locally-conda"></a>  Setup - Conda
 
