@@ -156,6 +156,18 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             choices=["bilinear", "bicubic", "lanczos"],
             default="lanczos"
         )
+        parser.add_argument(
+            "--center_crop",
+            type=bool,
+            required=False
+            action="set_true"            
+        )
+        parser.add_argument(
+            "--shuffle_rate",
+            type=float,
+            required=False,
+            default=0.25
+        )
 
         return parser
 
@@ -188,7 +200,9 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             repeats=opt.repeats,
             val_repeats=opt.val_repeats,
             resolution=opt.resolution,
-            resampler=opt.resampler
+            resampler=opt.resampler,
+            center_crop=opt.center_crop,
+            mix_probability=opt.shuffle_rate
         )
 
     return config
