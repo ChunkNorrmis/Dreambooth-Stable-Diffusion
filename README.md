@@ -24,7 +24,7 @@ source ./dream-venv/bin/activate
 pip install -U pip==24.0 wheel
 pip install --no-cache-dir -r ./requirements.txt
 ```
-6. Download a basemodel to train with
+6. Download a basemodel to train with *runways ema-only varient of their SD-v1.5 model provided below.*
 ```bash
 HF_HUB_ENABLE_HF_TRANSFER="1" huggingface_cli download 'sd-legacy/stable-diffusion-v1-5' 'v1-5-pruned-emaonly.ckpt' --local_dir .
 ```
