@@ -23,7 +23,6 @@ source ./dream-venv/bin/activate
 ```bash
 pip install -U pip==24.0 wheel
 pip install --no-cache-dir -r ./requirements.txt
-pip install huggingface_hub hf_transfer gdown 
 ```
 6. Download a basemodel to train with
 ```bash
