@@ -167,7 +167,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
         "target": "ldm.data.personalized.PersonalizedBase",
         "params": {
             "set": "train",
-            "reg": True,
+            "reg": "reg",
             "data_root": config.regularization_images_folder_path,
             "size": config.resolution,
             "repeats": config.val_repeats,
@@ -176,7 +176,9 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "flip_p": config.flip_percent,
             "interpolation": config.resampler,
             "token_only": False,
-            "per_image_tokens": False
+            "per_image_tokens": False,
+            "center_crop": config.center_crop,
+            "mixing_prob": config.mix_probability
         }
     }
 
@@ -198,10 +200,12 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "flip_p": config.flip_percent,
                     "interpolation": config.resampler,
                     "token_only": config.token_only,
-                    "per_image_tokens": False
+                    "per_image_tokens": False,
+                    "center_crop": config.center_crop,
+                    "mixing_prob": config.mix_probability
                 }
             },
-            "reg": reg_block if config.token_only is False else True,
+            "reg": reg_block if config.token_only is False else None,
             "validation": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
@@ -214,7 +218,9 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "flip_p": config.flip_percent,
                     "interpolation": config.resampler,
                     "token_only": config.token_only,
-                    "per_image_tokens": False
+                    "per_image_tokens": False,
+                    "center_crop": config.center_crop,
+                    "mixing_prob": config.mix_probability
                 }
             }
         }
