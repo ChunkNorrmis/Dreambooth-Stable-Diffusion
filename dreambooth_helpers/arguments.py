@@ -159,7 +159,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--center_crop",
             type=bool,
-            required=False
+            required=False,
             action="set_true"            
         )
         parser.add_argument(
