@@ -84,7 +84,7 @@ class JoePennaDreamboothConfigSchemaV1:
             raise Exception(f"Model Path Not Found: '{model_path}'.")
 
         self.learning_rate = learning_rate
-        if flip_percent > 0 and flip_percent < 1:
+        if not flip_percent < 0 and not flip_percent > 1:
             self.flip_percent = flip_percent
         else:
             raise Exception("--flip_p: must be between 0 and 1")
