@@ -205,11 +205,11 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "mixing_prob": config.mix_probability
                 }
             },
-            "reg": reg_block if config.token_only is False else False,
+            "reg": reg_block if config.token_only is False else None,
             "validation": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
-                    "set": "val",
+                    "set": "validation",
                     "data_root": config.training_images_folder_path,
                     "size": config.resolution,
                     "repeats": config.val_repeats,
