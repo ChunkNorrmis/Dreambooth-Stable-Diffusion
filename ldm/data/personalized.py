@@ -33,6 +33,7 @@ class PersonalizedBase(Dataset):
         self.reg = reg
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
+        self.num_images = self.__len__()
         self.placeholder_token = placeholder_token
         self.coarse_class_text = coarse_class_text
         self.repeats = repeats
@@ -49,10 +50,10 @@ class PersonalizedBase(Dataset):
         }[interpolation]
         
         if self.per_image_tokens:
-            assert self.__len__() < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
+            assert self.num_images < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self._length = self.__len__() * self.repeats
+            self.num_images = self.__len__() * self.repeats
 
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
@@ -62,7 +63,7 @@ class PersonalizedBase(Dataset):
 
     def __getitem__(self, i):
         example = {}
-        image_path = self.image_paths[i % self.__len__()]
+        image_path = self.image_paths[i % self.num_images]
         image = Image.open(image_path)
 
         if not image.mode == "RGB":
