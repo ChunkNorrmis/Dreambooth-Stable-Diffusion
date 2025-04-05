@@ -26,7 +26,8 @@ class PersonalizedBase(Dataset):
         flip_p,
         token_only,
         per_image_tokens,
-        mixing_prob
+        mixing_prob,
+        image_paths
     ):
         super().__init__()
         self.set = set
