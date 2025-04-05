@@ -37,7 +37,8 @@ class JoePennaDreamboothConfigSchemaV1:
         token_only:bool,
         center_crop:bool,
         mix_probability:float,
-        model_repo_id:str=None
+        model_repo_id:str=None,
+        run_seed_everything:bool=True
     ):
         self.schema = 1
         self.project_name = project_name
@@ -46,8 +47,15 @@ class JoePennaDreamboothConfigSchemaV1:
         self.debug = debug
         self.gpu = gpu
         self.seed = seed
-        seed_everything(self.seed)
         self.save_every_x_steps = save_every_x_steps
+        self.batch_size = batch_size
+        self.num_workers = num_workers
+        self.repeats = repeats
+        self.val_repeats = val_repeats
+        self.resolution = resolution
+        self.resampler = resampler
+        self.center_crop = center_crop
+        self.mix_probability = mix_probability
 
         if os.path.exists(training_images_folder_path):
             self.training_images_folder_path = os.path.relpath(training_images_folder_path)
@@ -60,13 +68,18 @@ class JoePennaDreamboothConfigSchemaV1:
             glob.glob(os.path.join(self.training_images_folder_path, '**', '*.png'), recursive=True)
         ]
 
-        _training_image_paths = [os.path.relpath(i, self.training_images_folder_path) for i in _training_images_paths]
+        self._training_image_paths = [os.path.relpath(i, self.training_images_folder_path) for i in _training_images_paths]
 
-        if len(_training_image_paths) > 0:
+        if len(self._training_image_paths) > 0:
             self.training_images_count = len(_training_image_paths)
         else:
             raise Exception(f"No Training Images (*.png, *.jpg, *.jpeg) found in '{self.training_images_folder_path}'.")
 
+        if max_training_steps > 0:
+            self.max_training_steps = max_training_steps
+        else:
+            self.max_training_steps = self.training_images_count * self.repeats
+        
         self.training_images = _training_images_paths
         self.token = token
         self.token_only = token_only
@@ -89,24 +102,8 @@ class JoePennaDreamboothConfigSchemaV1:
         else:
             raise Exception("--flip_p: must be between 0 and 1")
 
-        self.batch_size = batch_size
-        self.num_workers = num_workers
+        seed_everything(self.seed)
 
-        self.repeats = repeats
-        self.val_repeats = val_repeats
-
-        if max_training_steps > 0:
-            self.max_training_steps = max_training_steps
-        else:
-            self.max_training_steps = int(self.training_images_count * self.repeats)
-
-        self.resolution = resolution
-        self.resampler = resampler
-
-        
-        self.center_crop = center_crop
-        self.mix_probability = mix_probability
-        
         self.validate_gpu_vram()
         self._create_log_folders()
 
