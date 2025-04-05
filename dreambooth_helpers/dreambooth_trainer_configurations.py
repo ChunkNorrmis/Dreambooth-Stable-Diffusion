@@ -174,7 +174,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "repeats": config.val_repeats,
             "size": config.resolution,
             "interpolation": config.resampler,
-            "center_crop": config.center_crop,
+            "center_crop": False,
             "flip_p": config.flip_percent,
             "token_only": config.token_only,
             "per_image_tokens": False,
@@ -192,6 +192,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
                     "set": "train",
+                    "reg": False,
                     "data_root": config.training_images_folder_path,
                     "placeholder_token": config.token,
                     "coarse_class_text": config.class_word,
@@ -205,11 +206,12 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "mixing_prob": config.mix_probability
                 }
             },
-            "reg": reg_block if config.token_only is False else False,
+            "reg": reg_block if config.regularization_images_folder_path is not None and config.token_only is False else None,
             "validation": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
                     "set": "validation",
+                    "reg": False,
                     "data_root": config.training_images_folder_path,
                     "placeholder_token": config.token,
                     "coarse_class_text": config.class_word,
