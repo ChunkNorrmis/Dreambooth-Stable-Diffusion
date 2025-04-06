@@ -192,7 +192,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
                     "set": "train",
-                    "reg": None,
+                    "reg": False,
                     "data_root": config.training_images_folder_path,
                     "placeholder_token": config.token,
                     "coarse_class_text": config.class_word,
@@ -211,7 +211,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
                     "set": "val",
-                    "reg": None,
+                    "reg": False,
                     "data_root": config.training_images_folder_path,
                     "placeholder_token": config.token,
                     "coarse_class_text": config.class_word,
