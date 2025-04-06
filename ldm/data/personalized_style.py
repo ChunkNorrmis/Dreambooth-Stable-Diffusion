@@ -72,7 +72,7 @@ class PersonalizedBase(Dataset):
         self.size = size
         self.data_root = data_root
         self.image_paths = = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
-        self.num_images = self.__len__(self.image_paths)
+        self.num_images = len(self.image_paths)
         self.placeholder_token = placeholder_token
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
