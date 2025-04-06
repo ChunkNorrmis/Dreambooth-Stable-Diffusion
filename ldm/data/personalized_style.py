@@ -71,9 +71,9 @@ class PersonalizedBase(Dataset):
         self.repeats = repeats
         self.size = size
         self.data_root = data_root
-        self._len = self.__len__()
         self.image_paths = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
-        self.image_count = self._len(self.image_paths)
+        self.image_count = len(self.image_paths)
+        self._len = self.image_count
         self.placeholder_token = placeholder_token
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
@@ -88,11 +88,11 @@ class PersonalizedBase(Dataset):
             assert self.image_count < len(self.per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(self.per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self.image_count = int(self.image_count * self.repeats)
+            self.image_count = self._len * self.repeats
 
 
     def __len__(self):
-        return len()
+        return self._len
 
     def __getitem__(self, i):
         example = {}
