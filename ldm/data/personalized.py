@@ -60,7 +60,7 @@ class PersonalizedBase(Dataset):
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
 
     def __len__(self):
-        return self._image_count
+        return self.image_count
 
     def __getitem__(self, i):
         example = {}
