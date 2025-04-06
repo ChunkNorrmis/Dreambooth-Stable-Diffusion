@@ -33,7 +33,8 @@ class PersonalizedBase(Dataset):
         self.reg = reg
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
-        self.num_images = self.__len__(self.image_paths)
+        self.image_count = len(self.image_paths)
+        self._len = self.image_count
         self.placeholder_token = placeholder_token
         self.coarse_class_text = coarse_class_text
         self.repeats = repeats
@@ -50,20 +51,20 @@ class PersonalizedBase(Dataset):
         }[interpolation]
                 
         if self.per_image_tokens:
-            assert self.num_images < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
+            assert self.image_count < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self.num_images = self.num_images * self.repeats
+            self.image_count = self.image_count * self.repeats
 
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
 
-    def __len__(self, n):
-        return len(n)
+    def __len__(self):
+        return self._len()
 
     def __getitem__(self, i):
         example = {}
-        image_path = self.image_paths[i % self.num_images]
+        image_path = self.image_paths[i % self.image_count]
         image = Image.open(image_path, "r")
 
         if not image.mode == "RGB":
