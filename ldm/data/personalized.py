@@ -33,7 +33,7 @@ class PersonalizedBase(Dataset):
         self.reg = reg
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
-        self.image_count = len(self.image_paths)
+        self._image_count = len(self.image_paths)
         self.placeholder_token = placeholder_token
         self.coarse_class_text = coarse_class_text
         self.repeats = repeats
