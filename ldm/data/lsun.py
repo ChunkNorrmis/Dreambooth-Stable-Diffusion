@@ -20,8 +20,7 @@ class LSUNBase(Dataset):
         self.data_root = data_root
         with open(self.data_paths, "r") as f:
             self.image_paths = f.read().splitlines()
-        self._len = self.__len__()
-        self.num_images = self._len(self.image_paths)
+        self.num_images = self.__len__(self.image_paths)
         self.labels = {
             "relative_file_path_": [l for l in self.image_paths],
             "file_path_": [os.path.join(self.data_root, l)
