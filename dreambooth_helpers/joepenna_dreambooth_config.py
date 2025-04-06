@@ -77,7 +77,7 @@ class JoePennaDreamboothConfigSchemaV1:
         if max_training_steps > 0:
             self.max_training_steps = max_training_steps
         else:
-            self.max_training_steps = self.training_images_counts * self.repeats
+            self.max_training_steps = len(_training_images_paths) * self.repeats
         
                
         self.token = token
