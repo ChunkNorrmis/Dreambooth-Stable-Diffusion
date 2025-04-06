@@ -68,21 +68,18 @@ class JoePennaDreamboothConfigSchemaV1:
             glob.glob(os.path.join(self.training_images_folder_path, '**', '*.jpeg'), recursive=True) +
             glob.glob(os.path.join(self.training_images_folder_path, '**', '*.png'), recursive=True)
         ]
-
+    
         _training_image_paths = [os.path.relpath(i, self.training_images_folder_path) for i in _training_images_paths]
-        self._training_image_paths = os.path.join(self.training_images_folder_path, _training_image_paths)
-        
-        if len(self._training_image_paths) > 0:
-            self.training_images_count = len(self._training_image_paths)
-        else:
+               
+        if len(_training_images_paths) <= 0:
             raise Exception(f"No Training Images (*.png, *.jpg, *.jpeg) found in '{self.training_images_folder_path}'.")
 
         if max_training_steps > 0:
             self.max_training_steps = max_training_steps
         else:
-            self.max_training_steps = self.training_images_count * self.repeats
+            self.max_training_steps = self.training_images_counts * self.repeats
         
-        self.training_images = _training_images_paths
+               
         self.token = token
         self.token_only = token_only
         if self.token_only is False:
