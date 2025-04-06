@@ -47,7 +47,6 @@ class JoePennaDreamboothConfigSchemaV1:
         self.debug = debug
         self.gpu = gpu
         self.seed = seed
-        seed_everything(self.seed)
         self.save_every_x_steps = save_every_x_steps
         self.batch_size = batch_size
         self.num_workers = num_workers
@@ -62,24 +61,25 @@ class JoePennaDreamboothConfigSchemaV1:
             self.training_images_folder_path = os.path.abspath(training_images_folder_path)
         else:
             raise Exception(f"Training Images Path Not Found: '{os.path.relpath(self.training_images_folder_path)}'.")
-
+        
+        seed_everything(self.seed)
+        
         _training_images_paths = [i for i in
             glob.glob(os.path.join(self.training_images_folder_path, '**', '*.jpg'), recursive=True) +
             glob.glob(os.path.join(self.training_images_folder_path, '**', '*.jpeg'), recursive=True) +
             glob.glob(os.path.join(self.training_images_folder_path, '**', '*.png'), recursive=True)
         ]
     
-        _training_image_paths = [os.path.relpath(i, self.training_images_folder_path) for i in _training_images_paths]
+        _training_images_paths = [os.path.relpath(i, self.training_images_folder_path) for i in _training_images_paths]
                
         if len(_training_images_paths) <= 0:
             raise Exception(f"No Training Images (*.png, *.jpg, *.jpeg) found in '{self.training_images_folder_path}'.")
 
-        if max_training_steps > 0:
-            self.max_training_steps = max_training_steps
-        else:
+        if max_training_steps <= 0:
             self.max_training_steps = len(_training_images_paths) * self.repeats
-        
-               
+        else:
+            self.max_training_steps = max_training_steps
+                           
         self.token = token
         self.token_only = token_only
         if self.token_only is False:
@@ -96,6 +96,7 @@ class JoePennaDreamboothConfigSchemaV1:
             raise Exception(f"Model Path Not Found: '{model_path}'.")
 
         self.learning_rate = learning_rate
+        
         if not flip_percent < 0 and not flip_percent > 1:
             self.flip_percent = flip_percent
         else:
