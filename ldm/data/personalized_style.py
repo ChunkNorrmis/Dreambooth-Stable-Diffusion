@@ -71,8 +71,8 @@ class PersonalizedBase(Dataset):
         self.repeats = repeats
         self.size = size
         self.data_root = data_root
-        self.image_paths = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
-        self.num_images = self.__len__()
+        self.image_paths = = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
+        self.num_images = self.__len__(self.image_paths)
         self.placeholder_token = placeholder_token
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
@@ -87,15 +87,16 @@ class PersonalizedBase(Dataset):
             assert self.num_images < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self.num_images = self.__len__() * self.repeats
+            self.num_images = int(self.num_images * self.repeats)
 
 
     def __len__(self):
-        return len(self.image_paths)
+        return len()
 
     def __getitem__(self, i):
         example = {}
-        image = Image.open(self.image_paths[i % self.num_images])
+        image_path = self.image_paths[i % self.num_images]
+        image = Image.open(image_path, "r")
 
         if not image.mode == "RGB":
             image = image.convert("RGB")
@@ -119,10 +120,12 @@ class PersonalizedBase(Dataset):
             image = image.resize(
                 (self.size, self.size),
                 resample=self.interpolation,
-                reducing_gap=3)
+                reducing_gap=3
+            )
             image = ImageEnhance.Sharpness(image).enhance(1.3)
 
         image = self.flip(image)
+        
         image = np.array(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
