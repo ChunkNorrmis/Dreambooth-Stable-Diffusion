@@ -176,7 +176,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "interpolation": config.resampler,
             "center_crop": False,
             "flip_p": config.flip_percent,
-            "token_only": config.token_only,
+            "token_only": False,
             "per_image_tokens": False,
             "mixing_prob": config.mix_probability
         }
@@ -192,7 +192,6 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
                     "set": "train",
-                    "reg": False,
                     "data_root": config.training_images_folder_path,
                     "placeholder_token": config.token,
                     "coarse_class_text": config.class_word,
@@ -210,8 +209,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "validation": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
-                    "set": "validation",
-                    "reg": False,
+                    "set": "val",
                     "data_root": config.training_images_folder_path,
                     "placeholder_token": config.token,
                     "coarse_class_text": config.class_word,
