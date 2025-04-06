@@ -7,24 +7,27 @@ from torchvision import transforms
 
 
 class LSUNBase(Dataset):
-    def __init__(self,
-                 txt_file,
-                 data_root,
-                 size,
-                 interpolation,
-                 flip_p
-                 ):
+    def __init__(
+        self,
+        txt_file,
+        data_root,
+        size,
+        interpolation,
+        flip_p
+    ):
+        super().__init__()
         self.data_paths = txt_file
         self.data_root = data_root
         with open(self.data_paths, "r") as f:
             self.image_paths = f.read().splitlines()
-        self._length = len(self.image_paths)
+        self._len = self.__len__()
+        self.num_images = self._len(self.image_paths)
         self.labels = {
             "relative_file_path_": [l for l in self.image_paths],
             "file_path_": [os.path.join(self.data_root, l)
                            for l in self.image_paths],
         }
-
+        
         self.size = size
         self.interpolation = {
             "bilinear": PIL.Image.BILINEAR,
@@ -35,27 +38,32 @@ class LSUNBase(Dataset):
         self.flip = transforms.RandomHorizontalFlip(p=flip_p)
 
     def __len__(self):
-        return self._length
+        return len()
 
     def __getitem__(self, i):
         example = dict((k, self.labels[k][i]) for k in self.labels)
         image = Image.open(example["file_path_"])
+        
         if not image.mode == "RGB":
             image = image.convert("RGB")
 
-        img = np.array(image).astype(np.uint8)
-        
-        crop = min(img.shape[0], img.shape[1])
-        h, w, = img.shape[0], img.shape[1]
-        img = img[(h - crop) // 2:(h + crop) // 2,
-              (w - crop) // 2:(w + crop) // 2]
-
-        image = Image.fromarray(img)
-        image = self.flip(image)
+        if self.center_crop and not image.width == image.height:
+            img = np.array(image).astype(np.uint8)
+            crop = min(img.shape[0], img.shape[1])
+            h, w, = img.shape[0], img.shape[1]
+            img = img[(h - crop) // 2:(h + crop) // 2,
+                  (w - crop) // 2:(w + crop) // 2]
+            image = Image.fromarray(img)
         
         if not (self.size, self.size) == image.size:
-            image = image.resize((self.size, self.size), resample=self.interpolation, reducing_gap=3)
-            image = ImageEnhance.Sharpness(image).enhance(1.2)
+            image = image.resize(
+                (self.size, self.size),
+                resample=self.interpolation,
+                reducing_gap=3
+            )
+            image = ImageEnhance.Sharpness(image).enhance(1.3)
+
+        image = self.flip(image)
         
         image = np.array(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
