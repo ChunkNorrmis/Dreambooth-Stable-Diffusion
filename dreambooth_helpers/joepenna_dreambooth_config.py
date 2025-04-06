@@ -47,6 +47,7 @@ class JoePennaDreamboothConfigSchemaV1:
         self.debug = debug
         self.gpu = gpu
         self.seed = seed
+        seed_everything(self.seed)
         self.save_every_x_steps = save_every_x_steps
         self.batch_size = batch_size
         self.num_workers = num_workers
@@ -58,9 +59,9 @@ class JoePennaDreamboothConfigSchemaV1:
         self.mix_probability = mix_probability
 
         if os.path.exists(training_images_folder_path):
-            self.training_images_folder_path = os.path.relpath(training_images_folder_path)
+            self.training_images_folder_path = os.path.abspath(training_images_folder_path)
         else:
-            raise Exception(f"Training Images Path Not Found: '{self.training_images_folder_path}'.")
+            raise Exception(f"Training Images Path Not Found: '{os.path.relpath(self.training_images_folder_path)}'.")
 
         _training_images_paths = [i for i in
             glob.glob(os.path.join(self.training_images_folder_path, '**', '*.jpg'), recursive=True) +
@@ -68,10 +69,11 @@ class JoePennaDreamboothConfigSchemaV1:
             glob.glob(os.path.join(self.training_images_folder_path, '**', '*.png'), recursive=True)
         ]
 
-        self._training_image_paths = [os.path.relpath(i, self.training_images_folder_path) for i in _training_images_paths]
-
+        _training_image_paths = [os.path.relpath(i, self.training_images_folder_path) for i in _training_images_paths]
+        self._training_image_paths = os.path.join(self.training_images_folder_path, _training_image_paths)
+        
         if len(self._training_image_paths) > 0:
-            self.training_images_count = len(_training_image_paths)
+            self.training_images_count = len(self._training_image_paths)
         else:
             raise Exception(f"No Training Images (*.png, *.jpg, *.jpeg) found in '{self.training_images_folder_path}'.")
 
@@ -86,9 +88,9 @@ class JoePennaDreamboothConfigSchemaV1:
         if self.token_only is False:
             self.class_word = class_word
             if regularization_images_folder_path is not None and os.path.exists(regularization_images_folder_path):
-                self.regularization_images_folder_path = os.path.relpath(regularization_images_folder_path)
+                self.regularization_images_folder_path = os.path.abspath(regularization_images_folder_path)
             else:
-                raise Exception(f"Regularization Images Path Not Found: '{self.regularization_images_folder_path}'.")
+                raise Exception(f"Regularization Images Path Not Found: '{os.path.relpath(self.regularization_images_folder_path)}'.")
 
         self.model_repo_id = model_repo_id
         if os.path.exists(model_path):
@@ -102,7 +104,7 @@ class JoePennaDreamboothConfigSchemaV1:
         else:
             raise Exception("--flip_p: must be between 0 and 1")
 
-        seed_everything(self.seed)
+        
 
         self.validate_gpu_vram()
         self._create_log_folders()
