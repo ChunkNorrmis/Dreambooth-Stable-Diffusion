@@ -51,7 +51,7 @@ class PersonalizedBase(Dataset):
         }[interpolation]
                 
         if self.per_image_tokens:
-            assert self._len < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
+            assert self.image_count < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
             self.image_count = self._len * self.repeats
