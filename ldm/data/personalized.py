@@ -33,7 +33,7 @@ class PersonalizedBase(Dataset):
         self.reg = reg
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
-        self.num_images = len(self.image_paths)
+        self.num_images = self.__len__(self.image_paths)
         self.placeholder_token = placeholder_token
         self.coarse_class_text = coarse_class_text
         self.repeats = repeats
@@ -58,8 +58,8 @@ class PersonalizedBase(Dataset):
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
 
-    def __len__(self):
-        return len()
+    def __len__(self, n):
+        return len(n)
 
     def __getitem__(self, i):
         example = {}
