@@ -38,7 +38,7 @@ class LSUNBase(Dataset):
         self.flip = transforms.RandomHorizontalFlip(p=flip_p)
 
     def __len__(self):
-        return self._len()
+        return self._len
 
     def __getitem__(self, i):
         example = dict((k, self.labels[k][i]) for k in self.labels)
