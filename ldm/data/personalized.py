@@ -53,7 +53,7 @@ class PersonalizedBase(Dataset):
             assert self.num_images < self.__len__(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {self.__len__(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self.num_images = self.image_paths * self.repeats
+            self.num_images = int(self.num_images * self.repeats)
 
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
