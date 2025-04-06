@@ -72,7 +72,8 @@ class PersonalizedBase(Dataset):
         self.size = size
         self.data_root = data_root
         self.image_paths = = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
-        self.num_images = self.__len__(self.image_paths)
+        self.image_count = len(self.image_paths)
+        self._len = self.image_count
         self.placeholder_token = placeholder_token
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
@@ -84,25 +85,25 @@ class PersonalizedBase(Dataset):
         }[interpolation]
         
         if per_image_tokens:
-            assert self.num_images < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
+            assert self.image_count < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self.num_images = self.num_images * self.repeats
+            self.image_count = self.image_count * self.repeats
 
 
     def __len__(self, n):
-        return len(n)
+        return self._len()
 
     def __getitem__(self, i):
         example = {}
-        image_path = self.image_paths[i % self.num_images]
+        image_path = self.image_paths[i % self.image_count]
         image = Image.open(image_path, "r")
 
         if not image.mode == "RGB":
             image = image.convert("RGB")
 
         if self.per_image_tokens and np.random.uniform() < 0.25:
-            text = random.choice(imagenet_dual_templates_small).format(self.placeholder_token, per_img_token_list[i % self.num_images])
+            text = random.choice(imagenet_dual_templates_small).format(self.placeholder_token, per_img_token_list[i % self.image_count])
         else:
             text = random.choice(imagenet_templates_small).format(self.placeholder_token)
             
