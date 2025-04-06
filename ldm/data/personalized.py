@@ -26,8 +26,7 @@ class PersonalizedBase(Dataset):
         flip_p,
         token_only,
         per_image_tokens,
-        mixing_prob,
-        image_paths
+        mixing_prob
     ):
         super().__init__()
         self.set = set
@@ -39,22 +38,22 @@ class PersonalizedBase(Dataset):
         self.coarse_class_text = coarse_class_text
         self.repeats = repeats
         self.size = size
-        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
         self.center_crop = center_crop        
         self.token_only = token_only
         self.per_image_tokens = per_image_tokens
         self.mixing_prob = mixing_prob
+        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
         self.interpolation = {
             "bilinear": PIL.Image.BILINEAR,
             "bicubic": PIL.Image.BICUBIC,
             "lanczos": PIL.Image.LANCZOS
         }[interpolation]
-        
+                
         if self.per_image_tokens:
-            assert self.num_images < self.__len__(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
+            assert self.num_images < self.__len__(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {self.__len__(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self.num_images = self.num_images * self.repeats
+            self.num_images = self.image_paths * self.repeats
 
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
@@ -88,10 +87,12 @@ class PersonalizedBase(Dataset):
             image = image.resize(
                 (self.size, self.size),
                 resample=self.interpolation,
-                reducing_gap=3)
+                reducing_gap=3
+            )
             image = ImageEnhance.Sharpness(image).enhance(1.3)
 
         image = self.flip(image)
+        
         image = np.array(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
