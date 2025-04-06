@@ -20,7 +20,8 @@ class LSUNBase(Dataset):
         self.data_root = data_root
         with open(self.data_paths, "r") as f:
             self.image_paths = f.read().splitlines()
-        self.num_images = len(self.image_paths)
+        self.image_count = len(self.image_paths)
+        self._len = self.image_count
         self.labels = {
             "relative_file_path_": [l for l in self.image_paths],
             "file_path_": [os.path.join(self.data_root, l)
@@ -37,7 +38,7 @@ class LSUNBase(Dataset):
         self.flip = transforms.RandomHorizontalFlip(p=flip_p)
 
     def __len__(self):
-        return len()
+        return self._len()
 
     def __getitem__(self, i):
         example = dict((k, self.labels[k][i]) for k in self.labels)
