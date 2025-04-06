@@ -92,7 +92,7 @@ class PersonalizedBase(Dataset):
 
 
     def __len__(self):
-        return self._len
+        return len(self.image_paths)
 
     def __getitem__(self, i):
         example = {}
