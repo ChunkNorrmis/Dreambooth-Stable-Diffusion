@@ -24,21 +24,35 @@ source ./dream-venv/bin/activate
 pip install -U pip==24.0 wheel
 pip install --no-cache-dir -r ./requirements.txt
 ```
-6. Download a basemodel to train with *runways ema-only varient of their SD-v1.5 model provided below.*
+6. Download a base checkpont model of your choosing to use for your model training. (Runways SD v1.5 ema-only model provided in the line below via *huggingface* (**simply copy/paste into your terminal**).
 ```bash
-HF_HUB_ENABLE_HF_TRANSFER="1" huggingface_cli download 'sd-legacy/stable-diffusion-v1-5' 'v1-5-pruned-emaonly.ckpt' --local_dir .
+huggingface_cli download 'sd-legacy/stable-diffusion-v1-5' 'v1-5-pruned-emaonly.ckpt' --local_dir .
 ```
-7. add your training images to their corresponding folders in the specified directory hieracrchy (*explained in detail [below](captions-and-multi-concept)*)  
-
-8. Lauch dreambooth
+7. add your training/regularization images into their respective directories (*explained in detail [below](#captions-and-multi-concept)*)
+9. Lauch dreambooth
 ```bash
-python main.py --project_name "ProjectName" --training_model v1-5-pruned-emaonly.ckpt --regularization_images "C:\regularization_images" --training_images "C:\training_images" --max_training_steps 2000 --class_word "person" --token "zwx" --flip_p 0 --learning_rate 1.0e-06 --save_every_x_steps 250`
+python main.py --project_name "ProjectName" \
+--training_model "v1-5-pruned-emaonly.ckpt" \
+--regularization_images "regularization-images" \
+--training_images "training-images" \
+--max_training_steps 5000 \
+ --class_word "person"
+--token "zwx" \
+--flip_p 0.0 \
+--learning_rate 1.0e-06 \
+--batch_size 2 \
+--num_workers 1 \
+--repeats 100 \
+--val_repeats 10 \
+--resize 512 \
+--resampler "lanczos" \
 ```
 9. Cleanup
 ```bash
 deactivate 
 ```
-10. Profit??
+10. Profit
+$$ -> $$$
 
 
 # Extended Dreambooth How-To Guides by Yushan
