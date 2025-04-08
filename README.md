@@ -31,7 +31,8 @@ huggingface_cli download 'sd-legacy/stable-diffusion-v1-5' 'v1-5-pruned-emaonly.
 7. add your training/regularization images into their respective directories (*explained in detail [below](#captions-and-multi-concept)*)
 9. Lauch dreambooth
 ```bash
-python main.py --project_name "ProjectName" \
+python main.py \
+--project_name "ProjectName" \
 --training_model "v1-5-pruned-emaonly.ckpt" \
 --regularization_images "regularization-images" \
 --training_images "training-images" \
