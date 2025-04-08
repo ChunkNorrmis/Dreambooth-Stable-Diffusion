@@ -90,7 +90,7 @@ class PersonalizedBase(Dataset):
                 resample=self.interpolation,
                 reducing_gap=3
             )
-            image = ImageEnhance.Sharpness(image).enhance(1.3)
+            image = ImageEnhance.Sharpness(image).enhance(1.2)
 
         image = self.flip(image)
         
