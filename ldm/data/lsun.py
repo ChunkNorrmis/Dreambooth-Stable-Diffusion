@@ -16,18 +16,15 @@ class LSUNBase(Dataset):
         flip_p
     ):
         super().__init__()
-        self.data_paths = txt_file
+        with open(txt_file, "r") as f:
+            self.image_paths = f.read().splitlines()
         self.data_root = data_root
-        with open(self.data_paths, "r") as f:
-        self.image_paths = f.read().splitlines()
-        self._len = len(self.image_paths)
+        self._len = self.len(self.image_paths)
         self.image_count = self._len
         self.labels = {
             "relative_file_path_": [l for l in self.image_paths],
-            "file_path_": [os.path.join(self.data_root, l)
-                           for l in self.image_paths],
+            "file_path_": [os.path.join(self.data_root, l) for l in self.image_paths],
         }
-        
         self.size = size
         self.interpolation = {
             "bilinear": PIL.Image.BILINEAR,
