@@ -72,8 +72,8 @@ class PersonalizedBase(Dataset):
         self.size = size
         self.data_root = data_root
         self.image_paths = [os.path.join(self.data_root, file_path) for file_path in os.listdir(self.data_root)]
-        self._image_count  = len(self.image_paths)
-        self.image_count = self._image_count
+        self._len = len(self.image_paths)
+        self.image_count = self._len
         self.placeholder_token = placeholder_token
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
@@ -85,32 +85,32 @@ class PersonalizedBase(Dataset):
         }[interpolation]
         
         if per_image_tokens:
-            assert self._image_count < len(self.per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(self.per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
+            assert self.image_count < len(self.per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(self.per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self.image_count = self._image_count * self.repeats
+            self.image_count = self.image_count * self.repeats
 
 
     def __len__(self):
-        return self.image_count
+        return len(self.image_paths)
 
     def __getitem__(self, i):
         example = {}
-        image_path = self.image_paths[i % self._image_count]
+        image_path = self.image_paths[i % self.image_count]
         image = Image.open(image_path, "r")
 
         if not image.mode == "RGB":
             image = image.convert("RGB")
 
         if self.per_image_tokens and np.random.uniform() < 0.25:
-            text = random.choice(imagenet_dual_templates_small).format(self.placeholder_token, per_img_token_list[i % self._image_count])
+            text = random.choice(imagenet_dual_templates_small).format(self.placeholder_token, per_img_token_list[i % self.image_count])
         else:
             text = random.choice(imagenet_templates_small).format(self.placeholder_token)
             
         example["caption"] = text
         
         if self.center_crop and not image.width == image.height:
-            img = np.array(image).astype(np.uint8)
+            img = np.asarray(image).astype(np.uint8)
             crop = min(img.shape[0], img.shape[1])
             h, w, = img.shape[0], img.shape[1]
             img = img[(h - crop) // 2:(h + crop) // 2,
@@ -127,6 +127,6 @@ class PersonalizedBase(Dataset):
 
         image = self.flip(image)
         
-        image = np.array(image).astype(np.uint8)
+        image = np.asarray(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
