@@ -14,27 +14,27 @@ per_img_token_list = [
 class PersonalizedBase(Dataset):
     def __init__(
         self,
-        set,
-        reg,
-        data_root,
-        placeholder_token,
-        coarse_class_text,
-        repeats,
-        size,
-        interpolation,
-        center_crop,
-        flip_p,
-        token_only,
-        per_image_tokens,
-        mixing_prob
+        set:str,
+        data_root:str,
+        placeholder_token:str,
+        coarse_class_text:str,
+        repeats:int,
+        size:int,
+        interpolation:str,
+        center_crop:bool,
+        flip_p:float,
+        token_only:bool,
+        per_image_tokens:bool,
+        mixing_prob:float,
+        reg=False
     ):
         super().__init__()
         self.set = set
         self.reg = reg
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
-        self._image_count = len(self.image_paths)
-        self.image_count = self._image_count
+        self._len = len(self.image_paths)
+        self.image_count = self._len
         self.placeholder_token = placeholder_token
         self.coarse_class_text = coarse_class_text
         self.repeats = repeats
@@ -51,20 +51,22 @@ class PersonalizedBase(Dataset):
         }[interpolation]
                 
         if self.per_image_tokens:
-            assert self._image_count < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
+            assert self.image_count < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self.image_count = self._image_count * self.repeats
+            self.image_count = self.image_count * self.repeats
 
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
 
+
+    
     def __len__(self):
-        return self.image_count
+        return len(self.image_paths)
 
     def __getitem__(self, i):
         example = {}
-        image_path = self.image_paths[i % self._image_count]
+        image_path = self.image_paths[i % self.image_count]
         image = Image.open(image_path, "r")
 
         if not image.mode == "RGB":
@@ -77,7 +79,7 @@ class PersonalizedBase(Dataset):
             example["caption"] = caption_from_path(image_path, self.data_root, self.coarse_class_text, self.placeholder_token)
 
         if self.center_crop and not image.width == image.height:
-            img = np.array(image).astype(np.uint8)
+            img = np.asarray(image).astype(np.uint8)
             crop = min(img.shape[0], img.shape[1])
             h, w, = img.shape[0], img.shape[1]
             img = img[(h - crop) // 2:(h + crop) // 2,
@@ -94,6 +96,6 @@ class PersonalizedBase(Dataset):
 
         image = self.flip(image)
         
-        image = np.array(image).astype(np.uint8)
+        image = np.asarray(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
