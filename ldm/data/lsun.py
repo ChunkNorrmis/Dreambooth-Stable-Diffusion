@@ -19,9 +19,9 @@ class LSUNBase(Dataset):
         self.data_paths = txt_file
         self.data_root = data_root
         with open(self.data_paths, "r") as f:
-            self.image_paths = f.read().splitlines()
-        self.image_count = len(self.image_paths)
-        self._len = self.image_count
+        self.image_paths = f.read().splitlines()
+        self._len = len(self.image_paths)
+        self.image_count = self._len
         self.labels = {
             "relative_file_path_": [l for l in self.image_paths],
             "file_path_": [os.path.join(self.data_root, l)
@@ -38,7 +38,7 @@ class LSUNBase(Dataset):
         self.flip = transforms.RandomHorizontalFlip(p=flip_p)
 
     def __len__(self):
-        return self._len
+        return len(self.image_paths)
 
     def __getitem__(self, i):
         example = dict((k, self.labels[k][i]) for k in self.labels)
@@ -48,7 +48,7 @@ class LSUNBase(Dataset):
             image = image.convert("RGB")
 
         if self.center_crop and not image.width == image.height:
-            img = np.array(image).astype(np.uint8)
+            img = np.asarray(image).astype(np.uint8)
             crop = min(img.shape[0], img.shape[1])
             h, w, = img.shape[0], img.shape[1]
             img = img[(h - crop) // 2:(h + crop) // 2,
@@ -57,16 +57,15 @@ class LSUNBase(Dataset):
         
         if not (self.size, self.size) == image.size:
             image = image.resize(
-                (self.size, self.size),
+                size=(self.size, self.size),
                 resample=self.interpolation,
                 reducing_gap=3
             )
             image = ImageEnhance.Sharpness(image).enhance(1.3)
 
         image = self.flip(image)
-        
-        image = np.array(image).astype(np.uint8)
-        example["image"] = (image / 127.5 - 1.0).astype(np.float32)
+        img = np.asarray(image).astype(np.uint8)
+        example["image"] = (img / 127.5 - 1.0).astype(np.float32)
         return example
 
 
