@@ -26,7 +26,7 @@ class PersonalizedBase(Dataset):
         token_only:bool,
         per_image_tokens:bool,
         mixing_prob:float,
-        reg=False
+        reg:bool=False
     ):
         super().__init__()
         self.set = set
@@ -79,7 +79,7 @@ class PersonalizedBase(Dataset):
             example["caption"] = caption_from_path(image_path, self.data_root, self.coarse_class_text, self.placeholder_token)
 
         if self.center_crop and not image.width == image.height:
-            img = np.asarray(image).astype(np.uint8)
+            img = np.array(image).astype(np.uint8)
             crop = min(img.shape[0], img.shape[1])
             h, w, = img.shape[0], img.shape[1]
             img = img[(h - crop) // 2:(h + crop) // 2,
@@ -92,10 +92,10 @@ class PersonalizedBase(Dataset):
                 resample=self.interpolation,
                 reducing_gap=3
             )
-            image = ImageEnhance.Sharpness(image).enhance(1.2)
+            image = ImageEnhance.Sharpness(image).enhance(1.35)
 
         image = self.flip(image)
         
-        image = np.asarray(image).astype(np.uint8)
+        image = np.array(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
