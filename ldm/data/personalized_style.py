@@ -56,15 +56,15 @@ per_img_token_list = [
 class PersonalizedBase(Dataset):
     def __init__(
         self,
-        data_root,
-        size,
-        repeats,
-        interpolation,
-        flip_p,
-        set,
-        placeholder_token,
-        per_image_tokens=False,
-        center_crop=False
+        data_root:str,
+        size:int,
+        repeats:int,
+        interpolation:str,
+        flip_p:float,
+        set:str,
+        placeholder_token:str,
+        per_image_tokens:bool=False,
+        center_crop:bool=False
     ):
         super().__init__()
         self.set = set
@@ -110,7 +110,7 @@ class PersonalizedBase(Dataset):
         example["caption"] = text
         
         if self.center_crop and not image.width == image.height:
-            img = np.asarray(image).astype(np.uint8)
+            img = np.array(image).astype(np.uint8)
             crop = min(img.shape[0], img.shape[1])
             h, w, = img.shape[0], img.shape[1]
             img = img[(h - crop) // 2:(h + crop) // 2,
@@ -123,10 +123,11 @@ class PersonalizedBase(Dataset):
                 resample=self.interpolation,
                 reducing_gap=3
             )
-            image = ImageEnhance.Sharpness(image).enhance(1.2)
+            image = ImageEnhance.Sharpness(image).enhance(1.35)
 
         image = self.flip(image)
         
-        image = np.asarray(image).astype(np.uint8)
+        image = np.array(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
+
