@@ -9,18 +9,18 @@ from torchvision import transforms
 class LSUNBase(Dataset):
     def __init__(
         self,
-        txt_file,
-        data_root,
-        size,
-        interpolation,
-        flip_p
+        txt_file:str,
+        data_root:str,
+        size:int,
+        interpolation:str,
+        flip_p:float
     ):
         super().__init__()
         with open(txt_file, "r") as f:
             self.image_paths = f.read().splitlines()
         self.data_root = data_root
-        self._len = self.len(self.image_paths)
-        self.image_count = self._len
+        self.image_count = len(self.image_paths)
+        self._len = self.image_count
         self.labels = {
             "relative_file_path_": [l for l in self.image_paths],
             "file_path_": [os.path.join(self.data_root, l) for l in self.image_paths],
@@ -35,7 +35,7 @@ class LSUNBase(Dataset):
         self.flip = transforms.RandomHorizontalFlip(p=flip_p)
 
     def __len__(self):
-        return len(self.image_paths)
+        return self._len
 
     def __getitem__(self, i):
         example = dict((k, self.labels[k][i]) for k in self.labels)
@@ -45,7 +45,7 @@ class LSUNBase(Dataset):
             image = image.convert("RGB")
 
         if self.center_crop and not image.width == image.height:
-            img = np.asarray(image).astype(np.uint8)
+            img = np.array(image).astype(np.uint8)
             crop = min(img.shape[0], img.shape[1])
             h, w, = img.shape[0], img.shape[1]
             img = img[(h - crop) // 2:(h + crop) // 2,
@@ -54,14 +54,14 @@ class LSUNBase(Dataset):
         
         if not (self.size, self.size) == image.size:
             image = image.resize(
-                size=(self.size, self.size),
+                (self.size, self.size),
                 resample=self.interpolation,
                 reducing_gap=3
             )
-            image = ImageEnhance.Sharpness(image).enhance(1.3)
+            image = ImageEnhance.Sharpness(image).enhance(1.35)
 
         image = self.flip(image)
-        img = np.asarray(image).astype(np.uint8)
+        img = np.array(image).astype(np.uint8)
         example["image"] = (img / 127.5 - 1.0).astype(np.float32)
         return example
 
