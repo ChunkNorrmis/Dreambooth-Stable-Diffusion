@@ -174,7 +174,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "repeats": config.val_repeats,
             "size": config.resolution,
             "interpolation": config.resampler,
-            "center_crop": False,
+            "center_crop": config.center_crop,
             "flip_p": config.flip_percent,
             "token_only": False,
             "per_image_tokens": False,
