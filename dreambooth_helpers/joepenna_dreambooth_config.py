@@ -37,7 +37,8 @@ class JoePennaDreamboothConfigSchemaV1:
         token_only:bool,
         center_crop:bool,
         mix_probability:float,
-        model_repo_id:str=None,
+        validate:bool,
+        model_repo_id:str=Noned,
         run_seed_everything:bool=True
     ):
         self.schema = 1
@@ -56,6 +57,7 @@ class JoePennaDreamboothConfigSchemaV1:
         self.resampler = resampler
         self.center_crop = center_crop
         self.mix_probability = mix_probability
+        self.validate = validate
 
         if os.path.exists(training_images_folder_path):
             self.training_images_folder_path = os.path.abspath(training_images_folder_path)
@@ -156,7 +158,8 @@ class JoePennaDreamboothConfigSchemaV1:
                     resolution=config_parsed['resolution'],
                     resampler=config_parsed['resampler'],
                     mix_probability=config_parsed['shuffle_rate'],
-                    center_crop=config_parsed['center_crop']
+                    center_crop=config_parsed['center_crop'],
+                    validate=config_parsed['validate']
                 )
             else:
                 print(f"Unrecognized schema: {config_parsed['schema']}", file=sys.stderr)
