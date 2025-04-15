@@ -178,10 +178,30 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "flip_p": config.flip_percent,
             "token_only": False,
             "per_image_tokens": False,
-            "mixing_prob": config.mix_probability
+            "mixing_prob": config.mix_probability,
+            "shuffle": True if config.mix_probability > 0.0 else False
         }
     }
 
+    val_block = {
+        "target": "ldm.data.personalized.PersonalizedBase",
+        "params": {
+            "set": "validation",
+            "data_root": config.training_images_folder_path,
+            "placeholder_token": config.token,
+            "coarse_class_text": config.class_word,
+            "repeats": config.val_repeats,
+            "size": config.resolution,
+            "interpolation": config.resampler,
+            "center_crop": config.center_crop,
+            "flip_p": config.flip_percent,
+            "token_only": config.token_only,
+            "per_image_tokens": False,
+            "mixing_prob": config.mix_probability,
+            "shuffle": True if config.mix_probability > 0.0 else False
+        }
+    }
+    
     data_config = {
         "target": "main.DataModuleFromConfig",
         "params": {
@@ -202,26 +222,12 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "flip_p": config.flip_percent,
                     "token_only": config.token_only,
                     "per_image_tokens": False,
-                    "mixing_prob": config.mix_probability
+                    "mixing_prob": config.mix_probability,
+                    "shuffle": True if config.mix_probability > 0.0 else False
                 }
             },
-            "reg": reg_block if config.regularization_images_folder_path is not None and config.token_only is False else False,
-            "validation": {
-                "target": "ldm.data.personalized.PersonalizedBase",
-                "params": {
-                    "set": "validation",
-                    "data_root": config.training_images_folder_path,
-                    "placeholder_token": config.token,
-                    "coarse_class_text": config.class_word,
-                    "repeats": config.val_repeats,
-                    "size": config.resolution,
-                    "interpolation": config.resampler,
-                    "center_crop": False,
-                    "flip_p": config.flip_percent,
-                    "token_only": config.token_only,
-                    "per_image_tokens": False,
-                    "mixing_prob": None
-                }
+            "reg": reg_block if config.regularization_images_folder_path and not config.token_only else False,
+            "validation": val_block if config.validate_training else False
             }
         }
     }
