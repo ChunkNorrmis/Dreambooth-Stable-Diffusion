@@ -168,9 +168,12 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             default=0.25
         )
         parser.add_argument(
-            "--validate",
-            type=bool,
-            required=True
+            "--auxiliary_sets",
+            type=str,
+            nargs="+",
+            choices=["validation", "test", "predict"],
+            required=False,
+            default="validation"
         )
             
         return parser
@@ -207,7 +210,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             resampler=opt.resampler,
             center_crop=opt.center_crop,
             mix_probability=opt.shuffle_rate,
-            validate=opt.validate
+            auxiliary=opt.auxiliary_sets
         )
 
     return config
