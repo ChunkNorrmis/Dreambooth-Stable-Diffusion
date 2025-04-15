@@ -9,7 +9,7 @@ import torch
 from pytorch_lightning import seed_everything
 
 
-class JoePennaDreamboothConfigSchemaV1:
+class JoePennaDreamboothConfigSchemaV1():
     def __init__(self):
         super().__init__()
 
