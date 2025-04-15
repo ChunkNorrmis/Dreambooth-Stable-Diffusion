@@ -167,7 +167,12 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             required=False,
             default=0.25
         )
-
+        parser.add_argument(
+            "--validate",
+            type=bool,
+            required=True
+        )
+            
         return parser
 
     parser = _get_parser()
@@ -201,7 +206,8 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             resolution=opt.resolution,
             resampler=opt.resampler,
             center_crop=opt.center_crop,
-            mix_probability=opt.shuffle_rate
+            mix_probability=opt.shuffle_rate,
+            validate=opt.validate
         )
 
     return config
