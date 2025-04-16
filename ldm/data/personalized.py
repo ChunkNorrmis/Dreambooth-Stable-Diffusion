@@ -43,7 +43,8 @@ class PersonalizedBase(Dataset):
         self.token_only = token_only
         self.per_image_tokens = per_image_tokens
         self.mixing_prob = mixing_prob
-        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
+        self.flip_p = flip_p
+        self.flip = transforms.RandomHorizontalFlip(p=self.flip_p)
         self.interpolation = {
             "bilinear": PIL.Image.BILINEAR,
             "bicubic": PIL.Image.BICUBIC,
@@ -83,10 +84,11 @@ class PersonalizedBase(Dataset):
 
         if self.center_crop and not image.width == image.height:
             img = np.array(image).astype(np.uint8)
+            
             crop = min(img.shape[0], img.shape[1])
             h, w, = img.shape[0], img.shape[1]
-            img = img[(h - crop) // 2:(h + crop) // 2,
-                      (w - crop) // 2:(w + crop) // 2]
+            img = img[(h - crop) // 2:(h + crop) // 2, (w - crop) // 2:(w + crop) // 2]
+            
             image = Image.fromarray(img)
         
         if not (self.size, self.size) >= image.size:
@@ -95,6 +97,7 @@ class PersonalizedBase(Dataset):
                 resample=self.interpolation,
                 reducing_gap=3
             )
+            
             image = ImageEnhance.Sharpness(image).enhance(1.25)
 
         image = np.array(image).astype(np.uint8)
