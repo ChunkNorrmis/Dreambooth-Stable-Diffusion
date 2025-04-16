@@ -17,6 +17,7 @@ diffusers[training]==0.3.0
 captionizer==1.0.1
 datasets
 huggingface_hub[hf_transfer]
+safetensors
 -e .
 -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
 -e git+https://github.com/openai/CLIP.git@main#egg=clip
