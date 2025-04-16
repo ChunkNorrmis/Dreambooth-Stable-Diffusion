@@ -9,10 +9,11 @@ import torch
 from pytorch_lightning import seed_everything
 
 
-class JoePennaDreamboothConfigSchemaV1():
-    def __init__(self):
+class JoePennaDreamboothConfigSchemaV1:
+    def __init__(self, schema=1):
         super().__init__()
-
+        self.schema = schema
+    
     def saturate(
         self,
         project_name:str,
@@ -38,13 +39,12 @@ class JoePennaDreamboothConfigSchemaV1():
         center_crop:bool,
         mix_probability:float,
         auxiliary:list[str],
-        model_repo_id:str=Noned,
-        run_seed_everything:bool=True
+        model_repo_id=None,
+        run_seed_everything=True
     ):
-        self.schema = 1
         self.project_name = project_name
-        self.config_date_time = datetime.now(timezone.utc).strftime("%Y-%m-%d--%H-%M")
-        self.project_config_filename = f"{self.config_date_time}-{self.project_name}-config.json"
+        self.date_time_config = datetime.now(timezone.utc).strftime("%m-%d--%H-%M")
+        self.project_config_filename = f"{self.date_time_config}-{self.project_name}-config.json"
         self.debug = debug
         self.gpu = gpu
         self.seed = seed
@@ -59,7 +59,7 @@ class JoePennaDreamboothConfigSchemaV1():
         self.mix_probability = mix_probability
 
         if os.path.exists(training_images_folder_path):
-            self.training_images_folder_path = os.path.abspath(training_images_folder_path)
+            self.training_images_folder_path = os.path.relpath(training_images_folder_path)
         else:
             raise Exception(f"Training Images Path Not Found: '{os.path.relpath(self.training_images_folder_path)}'.")
         
@@ -83,16 +83,17 @@ class JoePennaDreamboothConfigSchemaV1():
                            
         self.token = token
         self.token_only = token_only
+        
         if self.token_only is False:
             self.class_word = class_word
-            if regularization_images_folder_path is not None and os.path.exists(regularization_images_folder_path):
-                self.regularization_images_folder_path = os.path.abspath(regularization_images_folder_path)
+            if regularization_images_folder_path and os.path.exists(regularization_images_folder_path):
+                self.regularization_images_folder_path = os.path.relpath(regularization_images_folder_path)
             else:
                 raise Exception(f"Regularization Images Path Not Found: '{os.path.relpath(self.regularization_images_folder_path)}'.")
 
         self.model_repo_id = model_repo_id
         if os.path.exists(model_path):
-            self.model_path = model_path
+            self.model_path = os.path.relpath(model_path)
         else:
             raise Exception(f"Model Path Not Found: '{model_path}'.")
 
@@ -180,7 +181,7 @@ class JoePennaDreamboothConfigSchemaV1():
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
     def create_checkpoint_file_name(self, steps: str):
-        return f"{self.config_date_time}_{self.project_name}_{int(steps):05d}_steps.ckpt".replace(" ", "_")
+        return f"{self.date_time_config}_{self.project_name}_{int(steps):05d}_steps.ckpt".replace(" ", "_")
 
     def save_config_to_file(self, save_path: str, create_active_config: bool = False):
         if not os.path.exists(save_path):
@@ -197,10 +198,10 @@ class JoePennaDreamboothConfigSchemaV1():
             print(f"✅ {self.project_config_filename} successfully generated.  Proceed to training.")
 
     def get_training_folder_name(self) -> str:
-        return f"{self.config_date_time}_{self.project_name}"
+        return f"{self.date_time_config}_{self.project_name}"
 
     def log_directory(self) -> str:
-        return os.path.join("logs", f"{self.config_date_time}_{self.project_name}")
+        return os.path.join("logs", f"{self.date_time_config}_{self.project_name}")
 
     def log_checkpoint_directory(self) -> str:
         return os.path.join(self.log_directory(), "ckpts")
