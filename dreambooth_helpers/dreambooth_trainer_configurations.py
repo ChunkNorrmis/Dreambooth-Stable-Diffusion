@@ -178,8 +178,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "flip_p": config.flip_percent,
             "token_only": False,
             "per_image_tokens": False,
-            "mixing_prob": config.mix_probability,
-            "shuffle": True if config.mix_probability > 0.0 else False
+            "mixing_prob": config.mix_probability
         }
     }
 
@@ -197,8 +196,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "flip_p": config.flip_percent,
             "token_only": config.token_only,
             "per_image_tokens": False,
-            "mixing_prob": config.mix_probability,
-            "shuffle": True if config.mix_probability > 0.0 else False
+            "mixing_prob": config.mix_probability
         }
     }
 
@@ -227,6 +225,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "batch_size": config.batch_size,
             "num_workers": config.num_workers,
             "wrap": False,
+            "shuffle": True if config.mix_probability > 0.0 else False
             "train": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
@@ -241,8 +240,7 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                     "flip_p": config.flip_percent,
                     "token_only": config.token_only,
                     "per_image_tokens": False,
-                    "mixing_prob": config.mix_probability,
-                    "shuffle": True if config.mix_probability > 0.0 else False
+                    "mixing_prob": config.mix_probability
                 }
             },
             "reg": reg_block if config.regularization_images_folder_path and not config.token_only else False,
