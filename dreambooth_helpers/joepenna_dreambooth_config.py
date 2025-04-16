@@ -37,7 +37,7 @@ class JoePennaDreamboothConfigSchemaV1():
         token_only:bool,
         center_crop:bool,
         mix_probability:float,
-        validate:bool,
+        auxiliary:list[str],
         model_repo_id:str=Noned,
         run_seed_everything:bool=True
     ):
@@ -57,7 +57,6 @@ class JoePennaDreamboothConfigSchemaV1():
         self.resampler = resampler
         self.center_crop = center_crop
         self.mix_probability = mix_probability
-        self.validate = validate
 
         if os.path.exists(training_images_folder_path):
             self.training_images_folder_path = os.path.abspath(training_images_folder_path)
@@ -104,8 +103,21 @@ class JoePennaDreamboothConfigSchemaV1():
         else:
             raise Exception("--flip_p: must be between 0 and 1")
 
+        if "validation" in [auxiliary]:
+            self.validate = "validation"
+        else:
+            self.validate = None
         
-
+        if "test" in [auxiliary]:
+            self.test = "test"
+        else:
+            self.test = None
+        
+        if "predict" in [auxiliary]:
+            self.predict = "predict"
+        else:
+            self.predict = None
+            
         self.validate_gpu_vram()
         self._create_log_folders()
 
