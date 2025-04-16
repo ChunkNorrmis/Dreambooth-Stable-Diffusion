@@ -215,7 +215,6 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "token_only": config.token_only,
             "per_image_tokens": False,
             "mixing_prob": 0.0,
-            "shuffle": False
         }
     }
     
@@ -225,7 +224,6 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "batch_size": config.batch_size,
             "num_workers": config.num_workers,
             "wrap": False,
-            "shuffle": True if config.mix_probability > 0.0 else False
             "train": {
                 "target": "ldm.data.personalized.PersonalizedBase",
                 "params": {
