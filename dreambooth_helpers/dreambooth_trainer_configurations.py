@@ -201,6 +201,25 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
             "shuffle": True if config.mix_probability > 0.0 else False
         }
     }
+
+    test_block = {
+        "target": "ldm.data.personalized.PersonalizedBase",
+        "params": {
+            "set": "test",
+            "data_root": config.training_images_folder_path,
+            "placeholder_token": config.token,
+            "coarse_class_text": config.class_word,
+            "repeats": 50,
+            "size": config.resolution,
+            "interpolation": config.resampler,
+            "center_crop": False,
+            "flip_p": config.flip_percent,
+            "token_only": config.token_only,
+            "per_image_tokens": False,
+            "mixing_prob": 0.0,
+            "shuffle": False
+        }
+    }
     
     data_config = {
         "target": "main.DataModuleFromConfig",
@@ -227,7 +246,8 @@ def get_dreambooth_data_config(config: JoePennaDreamboothConfigSchemaV1) -> dict
                 }
             },
             "reg": reg_block if config.regularization_images_folder_path and not config.token_only else False,
-            "validation": val_block if config.validate_training else False
+            "validation": val_block if config.validate else False,
+            "test": test_block if config.test else False
             }
         }
     }
