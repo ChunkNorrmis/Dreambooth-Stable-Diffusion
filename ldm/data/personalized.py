@@ -33,8 +33,8 @@ class PersonalizedBase(Dataset):
         self.reg = reg
         self.data_root = data_root
         self.image_paths = find_images(self.data_root)
-        self.image_count = len(self.image_paths)
-        self._len = self.image_count
+        self._len = len(self.image_paths)
+        self.image_count = self._len
         self.placeholder_token = placeholder_token
         self.coarse_class_text = coarse_class_text
         self.repeats = repeats
@@ -54,7 +54,7 @@ class PersonalizedBase(Dataset):
             assert self.image_count < len(per_img_token_list), f"Can't use per-image tokens when the training set contains more than {len(per_img_token_list)} tokens. To enable larger sets, add more tokens to 'per_img_token_list'."
 
         if self.set == "train":
-            self._len = self.image_count * self.repeats
+            self._len = len(self.image_paths) * self.repeats
 
         if self.reg and self.coarse_class_text:
             self.reg_tokens = OrderedDict([('C', self.coarse_class_text)])
@@ -62,7 +62,7 @@ class PersonalizedBase(Dataset):
 
     
     def __len__(self):
-        return self._len
+        return len(self.image_paths)
 
     def __getitem__(self, i):
         example = {}
@@ -71,7 +71,10 @@ class PersonalizedBase(Dataset):
 
         if not image.mode == "RGB":
             image = image.convert("RGB")
-
+        
+        if self.flip_p > 0.0:
+            image = self.flip(image)
+        
         example["caption"] = ""
         if self.reg and self.coarse_class_text:
             example["caption"] = generic_captions_from_path(image_path, self.data_root, self.reg_tokens)
@@ -86,16 +89,14 @@ class PersonalizedBase(Dataset):
                       (w - crop) // 2:(w + crop) // 2]
             image = Image.fromarray(img)
         
-        if not (self.size, self.size) == image.size:
+        if not (self.size, self.size) >= image.size:
             image = image.resize(
-                (self.size, self.size),
+                size=(self.size, self.size),
                 resample=self.interpolation,
                 reducing_gap=3
             )
-            image = ImageEnhance.Sharpness(image).enhance(1.35)
+            image = ImageEnhance.Sharpness(image).enhance(1.25)
 
-        image = self.flip(image)
-        
         image = np.array(image).astype(np.uint8)
         example["image"] = (image / 127.5 - 1.0).astype(np.float32)
         return example
