@@ -77,7 +77,8 @@ class PersonalizedBase(Dataset):
         self.placeholder_token = placeholder_token
         self.per_image_tokens = per_image_tokens
         self.center_crop = center_crop
-        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
+        self.flip_p = flip_p
+        self.flip = transforms.RandomHorizontalFlip(p=self.flip_p)
         self.interpolation = {
             "bilinear": PIL.Image.BILINEAR,
             "bicubic": PIL.Image.BICUBIC,
@@ -102,7 +103,7 @@ class PersonalizedBase(Dataset):
         if not image.mode == "RGB":
             image = image.convert("RGB")
 
-        if flip_p > 0.0:
+        if self.flip_p > 0.0:
             image = self.flip(image)
         
         if self.per_image_tokens and np.random.uniform() < 0.25:
