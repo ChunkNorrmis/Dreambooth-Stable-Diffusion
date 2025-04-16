@@ -66,7 +66,7 @@ class DataModuleFromConfig(pl.LightningDataModule):
             self.val_dataloader = partial(self._val_dataloader, shuffle=self.shuffle)
         if test is not None:
             self.dataset_configs["test"] = test
-            self.test_dataloader = partial(self._test_dataloader, shuffle=self.shuffle)
+            self.test_dataloader = partial(self._test_dataloader, shuffle=False)
         if predict is not None:
             self.dataset_configs["predict"] = predict
             self.predict_dataloader = self._predict_dataloader
