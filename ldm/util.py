@@ -4,7 +4,7 @@ from collections import abc
 from inspect import isfunction
 from queue import Queue
 from threading import Thread
-
+from safetensors import load_file
 import numpy as np
 import torch
 from PIL import Image, ImageDraw, ImageFont
@@ -70,13 +70,16 @@ def mean_flat(tensor):
 def count_params(model, verbose=False):
     total_params = sum(p.numel() for p in model.parameters())
     if verbose:
-        print(f"{model.__class__.__name__} has {total_params * 1.e-6:.2f} M params.")
+        print(f"{model.__class__.__name__} has {total_params * 1.0e-06:.2f} M params.")
     return total_params
 
 def load_model_from_config(config, ckpt, verbose=False):
     print(f"Loading model from {ckpt}")
-
-    pl_sd = torch.load(ckpt, map_location="cpu")
+    if ckpt.endswith('.ckpt'):
+        pl_sd = torch.load(ckpt, map_location="cpu")
+    elif ckpt.endswith('.safetensors'):
+        pl_sd = load_file(ckpt, device="cpu")
+    
     if "state_dict" in pl_sd:
         sd = pl_sd["state_dict"]
     else:
