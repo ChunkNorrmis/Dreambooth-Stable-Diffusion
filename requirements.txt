@@ -1,6 +1,3 @@
--e .
--e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
--e git+https://github.com/openai/CLIP.git@main#egg=clip
 --extra-index-url https://download.pytorch.org/whl/cu121
 torch==2.3.1+cu121
 torchvision==0.18.1+cu121
@@ -19,5 +16,8 @@ kornia==0.6.7
 diffusers[training]==0.3.0
 captionizer==1.0.1
 datasets
-huggingface_hub
-hf_transfer
+huggingface_hub[hf_transfer]
+-e .
+-e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
+-e git+https://github.com/openai/CLIP.git@main#egg=clip
+
