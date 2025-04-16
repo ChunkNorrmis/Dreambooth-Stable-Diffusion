@@ -91,9 +91,18 @@ class JoePennaDreamboothConfigSchemaV1:
             else:
                 raise Exception(f"Regularization Images Path Not Found: '{os.path.relpath(self.regularization_images_folder_path)}'.")
 
-        self.model_repo_id = model_repo_id
-        if os.path.exists(model_path):
+        if model_path.endswith('.ckpt') and os.path.exists(model_path):
             self.model_path = os.path.relpath(model_path)
+        else:
+            try:
+                from huggingface_hub import hf_hub_download
+                import joblib
+
+                model_path = model_path.replace('/', '.')
+                REPO_ID, FILENAME = os.path.splitext(model_path)
+                self.model_path = joblib.load(
+                    hf_hub_download(repo_id=REPO_ID, filename=FILENAME)
+                )
         else:
             raise Exception(f"Model Path Not Found: '{model_path}'.")
 
