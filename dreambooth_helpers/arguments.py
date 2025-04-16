@@ -89,11 +89,11 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             help="Path to directory with regularization images"
         )
         parser.add_argument(
-            "--flip_p",
+            "--mirror_rate",
             type=float,
             required=False,
             default=0.25,
-            help="Flip Percentage "
+            help="Image Mirroring probability"
                     "Example: if set to 0.5, will flip (mirror) your training images 50% of the time."
                     "This helps expand your dataset without needing to include more training images."
                     "This can lead to worse results for face training since most people's faces are not perfectly symmetrical."
@@ -102,7 +102,7 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             "--learning_rate",
             type=float,
             required=False,
-            default=8.8e-07,
+            default=5.0e-07,
             help="Set the learning rate. Defaults to 1.0e-06 (0.000001).  Accepts scientific notation."
         )
         parser.add_argument(
@@ -123,31 +123,36 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             "--batch_size",
             type=int,
             required=False,
-            default=2
+            default=1,
+            help="image batch size and number of epochs to perform for iterable datasets" 
         )
         parser.add_argument(
-            "--num_workers",
+            "--workers",
             type=int,
             required=False,
-            default=1
+            default=0,
+            help="number of workers to deploy for data preprocessing"
         )
         parser.add_argument(
             "--repeats",
             type=int,
             required=False,
-            default=100
+            default=100,
+            help="number of repeats per image duirng training split"
         )
         parser.add_argument(
             "--val_repeats",
             type=int,
             required=False,
-            default=10
+            default=10,
+            help="number of repeats per image duirng validation split"
         )
         parser.add_argument(
             "--resolution",
             type=int,
             required=False,
-            default=512
+            default=512,
+            help="image resolution(N)^2 (N x N)"
         )
         parser.add_argument(
             "--resampler",
@@ -159,21 +164,24 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
         parser.add_argument(
             "--center_crop",
             required=False,
-            action="store_true"            
+            action="store_true",
+            help="make ANY polygon your new favorite rhombus!!!11!1"
         )
         parser.add_argument(
             "--shuffle_rate",
             type=float,
             required=False,
-            default=0.25
+            default=0.25,
+            help='"random" image selection "probability"'
         )
         parser.add_argument(
-            "--auxiliary_sets",
+            "--auxiliary",
             type=str,
             nargs="+",
             choices=["validation", "test", "predict"],
             required=False,
-            default="validation"
+            default="validation",
+            help="additional splits to perform in addition to training the training split"
         )
             
         return parser
@@ -198,19 +206,19 @@ def parse_arguments() -> JoePennaDreamboothConfigSchemaV1:
             token=opt.token,
             token_only=opt.token_only,
             class_word=opt.class_word,
-            flip_percent=opt.flip_p,
+            flip_percent=opt.mirror_rate,
             learning_rate=opt.learning_rate,
-            model_repo_id='',
+            model_repo_id=None,
             model_path=opt.training_model,
             batch_size=opt.batch_size,
-            num_workers=opt.num_workers,
+            num_workers=opt.workers,
             repeats=opt.repeats,
             val_repeats=opt.val_repeats,
             resolution=opt.resolution,
             resampler=opt.resampler,
             center_crop=opt.center_crop,
             mix_probability=opt.shuffle_rate,
-            auxiliary=opt.auxiliary_sets
+            auxiliary=[opt.auxiliary]
         )
 
     return config
