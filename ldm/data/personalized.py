@@ -93,11 +93,10 @@ class PersonalizedBase(Dataset):
         
         if not (self.size, self.size) >= image.size:
             image = image.resize(
-                size=(self.size, self.size),
+                (self.size, self.size),
                 resample=self.interpolation,
                 reducing_gap=3
             )
-            
             image = ImageEnhance.Sharpness(image).enhance(1.25)
 
         img = (np.asarray(image, dtype=np.uint8) / 127.5 - 1.0)
