@@ -31,8 +31,8 @@ class LSUNBase(Dataset):
             "bicubic": PIL.Image.BICUBIC,
             "lanczos": PIL.Image.LANCZOS
         }[interpolation]
-        
-        self.flip = transforms.RandomHorizontalFlip(p=flip_p)
+        self.flip_p = flip_p
+        self.flip = transforms.RandomHorizontalFlip(p=self.flip_p)
 
     def __len__(self):
         return self._len
@@ -44,25 +44,29 @@ class LSUNBase(Dataset):
         if not image.mode == "RGB":
             image = image.convert("RGB")
 
+        if self.flip_p > 0.0:
+            image = self.flip(image)
+        
         if self.center_crop and not image.width == image.height:
-            img = np.array(image).astype(np.uint8)
+            img = np.asarray(image, dtype=np.uint8)
+            
             crop = min(img.shape[0], img.shape[1])
             h, w, = img.shape[0], img.shape[1]
             img = img[(h - crop) // 2:(h + crop) // 2,
                   (w - crop) // 2:(w + crop) // 2]
+            
             image = Image.fromarray(img)
         
-        if not (self.size, self.size) == image.size:
+        if not (self.size, self.size) >= image.size:
             image = image.resize(
                 (self.size, self.size),
                 resample=self.interpolation,
                 reducing_gap=3
             )
-            image = ImageEnhance.Sharpness(image).enhance(1.35)
+            image = ImageEnhance.Sharpness(image).enhance(1.25)
 
-        image = self.flip(image)
-        img = np.array(image).astype(np.uint8)
-        example["image"] = (img / 127.5 - 1.0).astype(np.float32)
+        img = (np.asarray(image, dtype=np.uint8) / 127.5 - 1.0)
+        example["image"] = np.array(img, dtype=np.float32)
         return example
 
 
